@@ -64,6 +64,11 @@ export default defineConfig({
         },
       ],
       defaultLocale: 'en',
+      disable404Route: false,
+      expressiveCode: undefined,
+      components: {
+        ThemeSelect: './src/components/Empty.astro',
+      },
       head: [
         {
           tag: 'meta',
