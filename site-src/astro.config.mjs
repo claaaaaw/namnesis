@@ -42,8 +42,8 @@ export default defineConfig({
         {
           label: 'MEDITATIONS',
           items: [
-            { label: 'Writings', link: '/meditations/' },
             { label: 'Ship of Theseus', link: '/meditations/ship-of-theseus/' },
+            { label: 'Writings', link: '/meditations/' },
           ],
         },
         {
@@ -57,10 +57,6 @@ export default defineConfig({
             { label: 'Levels', link: '/conformance/levels/' },
             { label: 'Tests', link: '/conformance/tests/' },
           ],
-        },
-        {
-          label: 'CHANGELOG',
-          link: '/changelog/',
         },
       ],
       defaultLocale: 'en',
