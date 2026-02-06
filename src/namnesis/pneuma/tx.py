@@ -25,6 +25,22 @@ from .rpc import (
 )
 
 
+def _to_checksum_address(address: str) -> str:
+    """Convert an address to EIP-55 checksummed format.
+
+    eth-account requires checksummed addresses in transaction fields.
+    """
+    addr = address.lower().replace("0x", "")
+    addr_hash = _keccak256(addr.encode("utf-8")).hex()
+    result = "0x"
+    for i, c in enumerate(addr):
+        if c in "abcdef":
+            result += c.upper() if int(addr_hash[i], 16) >= 8 else c
+        else:
+            result += c
+    return result
+
+
 def build_contract_tx(
     contract_address: str,
     function_name: str,
@@ -63,7 +79,7 @@ def build_contract_tx(
     gas_price = get_gas_price()
 
     tx = {
-        "to": contract_address,
+        "to": _to_checksum_address(contract_address),
         "data": calldata,
         "value": value,
         "nonce": nonce,

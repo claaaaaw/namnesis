@@ -9,6 +9,7 @@ export default defineConfig({
       title: 'NAMNESIS',
       description: 'Sovereign AI Agent Protocol — A covenant for continuity between agents.',
       customCss: [
+        './src/styles/fonts.css',
         './src/styles/tokens.css',
         './src/styles/theme.css',
         './src/styles/typography.css',
@@ -68,7 +69,7 @@ export default defineConfig({
           tag: 'meta',
           attrs: {
             name: 'theme-color',
-            content: '#0b0d10',
+            content: '#0c0e13',
           },
         },
       ],

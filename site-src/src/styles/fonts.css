@@ -1,40 +1,15 @@
-/* JetBrains Mono Font Configuration
- * Using @fontsource for self-hosted fonts
- * Import this in your main layout or entry point
- */
+/* ═══════════════════════════════════════════════════════════
+   Namnesis Font System
+   Dual-stack: Inter (prose) + JetBrains Mono (code/protocol)
+   ═══════════════════════════════════════════════════════════ */
 
-/* Import from @fontsource/jetbrains-mono package */
+/* Inter — body / prose / navigation */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
+/* JetBrains Mono — code, protocol keywords, machine layer */
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/500.css';
 @import '@fontsource/jetbrains-mono/600.css';
-
-/* Fallback font-face declarations if @fontsource is not available */
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('JetBrains Mono Regular'),
-       local('JetBrainsMono-Regular'),
-       url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: local('JetBrains Mono Medium'),
-       local('JetBrainsMono-Medium'),
-       url('/fonts/JetBrainsMono-Medium.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: local('JetBrains Mono SemiBold'),
-       local('JetBrainsMono-SemiBold'),
-       url('/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
-}

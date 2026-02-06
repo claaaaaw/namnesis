@@ -1,0 +1,11 @@
+{
+  "chain": "base-sepolia",
+  "chainId": 84532,
+  "contracts": {
+    "SoulToken": "0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4",
+    "SoulGuard": "0x9e2cef363f0058d36e899a8860f9c76c64e9a775",
+    "NamnesisKernel": "0x80d18b069a8ff1634b3d89ebaa491bf23182384b",
+    "OwnableExecutor": "0x4Fd8d57b94966982B62e9588C27B4171B55E8354",
+    "USDC": "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+  }
+}

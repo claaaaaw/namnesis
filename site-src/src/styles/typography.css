@@ -1,11 +1,14 @@
 /**
  * Namnesis Typography
- * RFC-like, monospace-first typography system
+ * Readable prose with mono accents for protocol content
  */
 
-/* Base typography */
+/* ═══════════════════════════════════════════════════════════
+   BASE TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════ */
+
 body {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
@@ -13,60 +16,81 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings */
+/* ═══════════════════════════════════════════════════════════
+   HEADINGS — clear separation from body
+   ═══════════════════════════════════════════════════════════ */
+
 h1 {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
-  margin-bottom: var(--space-6);
-  letter-spacing: 0.02em;
+  margin-bottom: var(--space-8);
+  letter-spacing: -0.02em;
 }
 
 h2 {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
-  margin-top: var(--space-8);
-  margin-bottom: var(--space-4);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-5);
 }
 
 h3 {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
-  margin-top: var(--space-6);
-  margin-bottom: var(--space-3);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
 }
 
 h4 {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
-  margin-top: var(--space-4);
-  margin-bottom: var(--space-2);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
 }
 
-/* Paragraphs */
+/* ═══════════════════════════════════════════════════════════
+   PARAGRAPHS — comfortable reading
+   ═══════════════════════════════════════════════════════════ */
+
 p {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
   max-width: var(--content-width);
+  line-height: var(--line-height-normal);
 }
 
-/* Lists */
+/* ═══════════════════════════════════════════════════════════
+   LISTS — airy, scannable
+   ═══════════════════════════════════════════════════════════ */
+
 ul, ol {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
   padding-left: var(--space-6);
 }
 
 li {
   margin-bottom: var(--space-2);
+  line-height: var(--line-height-normal);
 }
 
 li::marker {
   color: var(--color-text-muted);
 }
 
-/* Emphasis */
+/* Nested lists */
+li > ul,
+li > ol {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EMPHASIS
+   ═══════════════════════════════════════════════════════════ */
+
 strong {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
@@ -77,37 +101,51 @@ em {
   color: var(--color-text-secondary);
 }
 
-/* RFC-style keywords */
+/* ═══════════════════════════════════════════════════════════
+   RFC-STYLE KEYWORDS — mono, colored, uppercase
+   ═══════════════════════════════════════════════════════════ */
+
 .keyword-must,
 .keyword-shall,
 .keyword-required {
+  font-family: var(--font-mono);
   color: var(--color-accent-cyan);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
+  font-size: 0.9em;
 }
 
 .keyword-should,
 .keyword-recommended {
+  font-family: var(--font-mono);
   color: var(--color-accent-green);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
+  font-size: 0.9em;
 }
 
 .keyword-may,
 .keyword-optional {
+  font-family: var(--font-mono);
   color: var(--color-text-secondary);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
+  font-size: 0.9em;
 }
 
 .keyword-must-not,
 .keyword-shall-not {
+  font-family: var(--font-mono);
   color: var(--color-accent-red);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
+  font-size: 0.9em;
 }
 
-/* Small text */
+/* ═══════════════════════════════════════════════════════════
+   SMALL TEXT
+   ═══════════════════════════════════════════════════════════ */
+
 small,
 .text-sm {
   font-size: var(--font-size-sm);
@@ -119,71 +157,72 @@ small,
   color: var(--color-text-muted);
 }
 
-/* Muted text */
 .text-muted {
   color: var(--color-text-muted);
 }
 
-/* Accent colors for text */
-.text-cyan {
-  color: var(--color-accent-cyan);
-}
+/* ═══════════════════════════════════════════════════════════
+   ACCENT TEXT
+   ═══════════════════════════════════════════════════════════ */
 
-.text-green {
-  color: var(--color-accent-green);
-}
+.text-cyan { color: var(--color-accent-cyan); }
+.text-green { color: var(--color-accent-green); }
+.text-yellow { color: var(--color-accent-yellow); }
+.text-red { color: var(--color-accent-red); }
 
-.text-yellow {
-  color: var(--color-accent-yellow);
-}
+/* ═══════════════════════════════════════════════════════════
+   CODE — mono font territory
+   ═══════════════════════════════════════════════════════════ */
 
-.text-red {
-  color: var(--color-accent-red);
-}
-
-/* Preformatted text */
 pre {
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-normal);
   overflow-x: auto;
-  padding: var(--space-4);
-  margin: var(--space-4) 0;
+  padding: var(--space-5);
+  margin: var(--space-6) 0;
 }
 
-/* Inline code */
 code:not(pre code) {
   font-family: var(--font-mono);
-  font-size: 0.9em;
+  font-size: 0.88em;
   background: var(--color-bg-tertiary);
-  padding: 0.1em 0.4em;
+  padding: 0.15em 0.45em;
   color: var(--color-accent-cyan);
+  border-radius: var(--border-radius-sm);
 }
 
-/* Definition lists (RFC-style) */
+/* ═══════════════════════════════════════════════════════════
+   DEFINITION LISTS — protocol-style
+   ═══════════════════════════════════════════════════════════ */
+
 dl {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 dt {
+  font-family: var(--font-mono);
   font-weight: var(--font-weight-semibold);
   color: var(--color-accent-cyan);
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
+  font-size: var(--font-size-sm);
 }
 
 dd {
   margin-left: var(--space-6);
-  margin-top: var(--space-1);
+  margin-top: var(--space-2);
   color: var(--color-text-secondary);
 }
 
-/* Abbreviations */
+/* ═══════════════════════════════════════════════════════════
+   MISC
+   ═══════════════════════════════════════════════════════════ */
+
 abbr[title] {
   text-decoration: underline dotted;
   cursor: help;
 }
 
-/* Superscript/subscript */
 sup, sub {
   font-size: 0.75em;
   line-height: 0;
@@ -191,10 +230,5 @@ sup, sub {
   vertical-align: baseline;
 }
 
-sup {
-  top: -0.5em;
-}
-
-sub {
-  bottom: -0.25em;
-}
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }

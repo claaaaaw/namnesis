@@ -1,13 +1,16 @@
 /**
  * Namnesis Theme Override
- * Customizes Starlight's default theme to match our cold, spec-like aesthetic
+ * Customizes Starlight to: cold, clear, readable
  */
 
-/* Override Starlight CSS variables */
+/* ═══════════════════════════════════════════════════════════
+   STARLIGHT VARIABLE OVERRIDES
+   ═══════════════════════════════════════════════════════════ */
+
 :root {
-  --sl-color-accent-low: #1a2a30;
+  --sl-color-accent-low: #152028;
   --sl-color-accent: var(--color-accent-cyan);
-  --sl-color-accent-high: #9ef0ff;
+  --sl-color-accent-high: #bef3ff;
   
   --sl-color-white: var(--color-text-primary);
   --sl-color-gray-1: var(--color-text-secondary);
@@ -25,14 +28,16 @@
   --sl-color-hairline-light: var(--color-border);
   --sl-color-hairline-shade: var(--color-border-accent);
   
-  --sl-font: var(--font-mono);
+  /* Font: sans for UI, mono for code */
+  --sl-font: var(--font-sans);
   --sl-font-system-mono: var(--font-mono);
   
-  --sl-text-h1: var(--font-size-2xl);
+  /* Text sizing: generous for readability */
+  --sl-text-h1: var(--font-size-3xl);
   --sl-text-h2: var(--font-size-xl);
   --sl-text-h3: var(--font-size-lg);
   --sl-text-h4: var(--font-size-base);
-  --sl-text-body: var(--font-size-sm);
+  --sl-text-body: var(--font-size-base);
   --sl-text-code: var(--font-size-sm);
   --sl-text-xs: var(--font-size-xs);
   
@@ -40,53 +45,109 @@
   --sl-line-height-headings: var(--line-height-tight);
 }
 
-/* Dark mode (default) */
+/* Dark mode (default and only) */
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
 }
 
-/* Global body styles */
+/* ═══════════════════════════════════════════════════════════
+   GLOBAL BODY
+   ═══════════════════════════════════════════════════════════ */
+
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
 }
 
-/* Remove rounded corners globally */
-* {
-  border-radius: var(--border-radius-none) !important;
+/* ═══════════════════════════════════════════════════════════
+   SELECTIVE BORDER RADIUS — not blanket zero
+   Keep protocol feel but soften interactive elements
+   ═══════════════════════════════════════════════════════════ */
+
+/* Code blocks, cards, panels: subtle rounding */
+pre,
+.card,
+.machine-panel,
+.starlight-aside {
+  border-radius: var(--border-radius-sm) !important;
 }
 
-/* Navigation */
+/* Buttons: slight rounding for clickability */
+button,
+.btn,
+[role="button"],
+a.action {
+  border-radius: var(--border-radius-sm) !important;
+}
+
+/* Tables, badges, nav: keep sharp */
+table,
+th,
+td,
+.badge,
+nav {
+  border-radius: 0 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════════════ */
+
 .site-title {
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.08em;
   color: var(--color-accent-cyan) !important;
+  font-size: var(--font-size-base);
 }
 
-/* Sidebar */
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR — clear hierarchy, comfortable spacing
+   ═══════════════════════════════════════════════════════════ */
+
 nav.sidebar {
   background: var(--color-bg-secondary);
   border-right: 1px solid var(--color-border);
 }
 
 nav.sidebar a {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--font-size-sm);
+  padding: var(--space-2) var(--space-4);
+  transition: all var(--transition-fast);
 }
 
 nav.sidebar a[aria-current='page'] {
   color: var(--color-accent-cyan);
-  background: var(--color-bg-tertiary);
+  background: var(--color-accent-cyan-dim);
+  border-left: 2px solid var(--color-accent-cyan);
 }
 
-/* Main content area */
+/* Sidebar group labels */
+.sidebar-group summary,
+starlight-menu-button {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN CONTENT
+   ═══════════════════════════════════════════════════════════ */
+
 main {
   background: var(--color-bg-primary);
 }
 
-/* Links */
+/* ═══════════════════════════════════════════════════════════
+   LINKS — clear affordance
+   ═══════════════════════════════════════════════════════════ */
+
 a {
   color: var(--color-accent-cyan);
   text-decoration: none;
@@ -95,84 +156,142 @@ a {
 
 a:hover {
   color: var(--color-accent-green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-/* Code blocks */
+/* ═══════════════════════════════════════════════════════════
+   CODE BLOCKS — mono territory
+   ═══════════════════════════════════════════════════════════ */
+
 pre {
   background: var(--color-bg-secondary) !important;
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);
+  padding: var(--space-5);
+  margin: var(--space-6) 0;
 }
 
 code {
   font-family: var(--font-mono);
   background: var(--color-bg-tertiary);
-  padding: 0.1em 0.3em;
+  padding: 0.15em 0.4em;
+  font-size: 0.88em;
 }
 
 pre code {
   background: transparent;
   padding: 0;
+  font-size: var(--font-size-sm);
 }
 
-/* Blockquotes */
+/* ═══════════════════════════════════════════════════════════
+   BLOCKQUOTES — distinguished, not cramped
+   ═══════════════════════════════════════════════════════════ */
+
 blockquote {
-  border-left: 2px solid var(--color-accent-cyan);
-  background: rgba(110, 231, 255, 0.05);
-  padding: var(--space-4);
-  margin: var(--space-4) 0;
+  border-left: 3px solid var(--color-accent-cyan);
+  background: var(--color-accent-cyan-dim);
+  padding: var(--space-5) var(--space-6);
+  margin: var(--space-6) 0;
   font-style: italic;
+  color: var(--color-text-secondary);
 }
 
-/* Tables */
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TABLES — clean, scannable
+   ═══════════════════════════════════════════════════════════ */
+
 table {
   border-collapse: collapse;
   width: 100%;
+  margin: var(--space-6) 0;
+  font-size: var(--font-size-sm);
 }
 
 th, td {
   border: 1px solid var(--color-border);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   text-align: left;
 }
 
 th {
   background: var(--color-bg-secondary);
   color: var(--color-text-muted);
-  font-weight: var(--font-weight-normal);
-  text-transform: lowercase;
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Headings */
+td {
+  color: var(--color-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEADINGS — strong visual hierarchy
+   ═══════════════════════════════════════════════════════════ */
+
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-mono);
-  font-weight: var(--font-weight-medium);
+  font-family: var(--font-sans);
   color: var(--color-text-primary);
 }
 
 h1 {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-3xl);
   color: var(--color-accent-cyan);
+  letter-spacing: -0.02em;
 }
 
 h2 {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xl);
   border-bottom: 1px solid var(--color-border);
-  padding-bottom: var(--space-2);
+  padding-bottom: var(--space-3);
+  margin-top: var(--space-12);
 }
 
-/* Horizontal rules */
+h3 {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+}
+
+h4 {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HORIZONTAL RULES — breathing room
+   ═══════════════════════════════════════════════════════════ */
+
 hr {
   border: none;
   border-top: 1px solid var(--color-border);
-  margin: var(--space-8) 0;
+  margin: var(--space-12) 0;
 }
 
-/* Selection */
+/* ═══════════════════════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════════════════════ */
+
 ::selection {
   background: var(--color-accent-cyan);
   color: var(--color-bg-primary);
 }
 
-/* Scrollbar */
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -184,8 +303,40 @@ hr {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-border-accent);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STARLIGHT ASIDES (caution/note/tip/danger)
+   ═══════════════════════════════════════════════════════════ */
+
+.starlight-aside {
+  padding: var(--space-5) var(--space-6);
+  margin: var(--space-6) 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO SECTION — impactful landing
+   ═══════════════════════════════════════════════════════════ */
+
+.hero {
+  padding: var(--space-16) 0 var(--space-12);
+}
+
+.hero h1 {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+}
+
+.hero .tagline {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
 }

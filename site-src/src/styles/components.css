@@ -1,10 +1,10 @@
 /**
  * Namnesis Component Styles
- * Styles for custom components
+ * Protocol components with comfortable spacing
  */
 
 /* ═══════════════════════════════════════════════════════════
-   SIGIL SYSTEM
+   SIGIL SYSTEM — mono, subtle markers
    ═══════════════════════════════════════════════════════════ */
 
 .sigil {
@@ -40,34 +40,35 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   NORMATIVE BLOCKS
+   NORMATIVE BLOCKS — clear visual distinction
    ═══════════════════════════════════════════════════════════ */
 
 .normative-block {
-  padding: var(--space-4);
-  margin: var(--space-4) 0;
-  border-left: 2px solid var(--color-border);
-  font-family: var(--font-mono);
+  padding: var(--space-5) var(--space-6);
+  margin: var(--space-8) 0;
+  border-left: 3px solid var(--color-border);
   font-size: var(--font-size-sm);
+  border-radius: var(--border-radius-sm);
 }
 
 .normative-block--normative {
   border-color: var(--color-normative);
-  background: rgba(110, 231, 255, 0.05);
+  background: var(--color-accent-cyan-dim);
 }
 
 .normative-block--informative {
   border-color: var(--color-informative);
+  background: rgba(157, 165, 176, 0.05);
 }
 
 .normative-block--note {
   border-color: var(--color-accent-yellow);
-  background: rgba(255, 216, 102, 0.05);
+  background: var(--color-accent-yellow-dim);
 }
 
 .normative-block--warning {
   border-color: var(--color-accent-red);
-  background: rgba(255, 107, 107, 0.05);
+  background: rgba(255, 107, 107, 0.06);
 }
 
 .normative-block strong {
@@ -87,13 +88,14 @@
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   text-decoration: none;
-  opacity: 0.6;
+  opacity: 0.5;
   transition: opacity var(--transition-fast);
 }
 
 .anchor-link:hover {
   opacity: 1;
   color: var(--color-accent-cyan);
+  text-decoration: none;
 }
 
 .anchor-id {
@@ -114,7 +116,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MACHINE PANEL
+   MACHINE PANEL — code/protocol territory
    ═══════════════════════════════════════════════════════════ */
 
 .machine-panel {
@@ -122,18 +124,20 @@
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
-  margin: var(--space-4) 0;
+  margin: var(--space-8) 0;
+  border-radius: var(--border-radius-sm);
 }
 
 .machine-panel__header {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--color-border);
   color: var(--color-accent-cyan);
   font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  text-transform: uppercase;
 }
 
 .machine-panel__table {
@@ -143,7 +147,7 @@
 
 .machine-panel__table th,
 .machine-panel__table td {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   text-align: left;
   border-bottom: 1px solid var(--color-border);
 }
@@ -152,24 +156,16 @@
   color: var(--color-text-muted);
   font-weight: var(--font-weight-normal);
   text-transform: lowercase;
+  font-size: var(--font-size-xs);
 }
 
-.artifact-path {
-  color: var(--color-text-primary);
-}
-
-.artifact-hash {
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-}
-
-.artifact-size {
-  color: var(--color-text-secondary);
-}
+.artifact-path { color: var(--color-text-primary); }
+.artifact-hash { color: var(--color-text-muted); font-family: var(--font-mono); }
+.artifact-size { color: var(--color-text-secondary); }
 
 .artifact-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .artifact-actions button {
@@ -180,6 +176,7 @@
   padding: 0;
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
+  transition: color var(--transition-fast);
 }
 
 .artifact-actions button:hover {
@@ -187,7 +184,7 @@
 }
 
 .machine-panel__footer {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--color-border);
 }
 
@@ -199,7 +196,7 @@
 
 .machine-panel__copy-all {
   width: 100%;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border);
   color: var(--color-text-primary);
@@ -253,12 +250,13 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border);
   color: var(--color-text-primary);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -266,12 +264,14 @@
 .btn:hover {
   border-color: var(--color-accent-cyan);
   color: var(--color-accent-cyan);
+  text-decoration: none;
 }
 
 .btn--primary {
   background: var(--color-accent-cyan);
   border-color: var(--color-accent-cyan);
   color: var(--color-bg-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 .btn--primary:hover {
@@ -281,21 +281,26 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   CARDS
+   CARDS — Starlight CardGrid
    ═══════════════════════════════════════════════════════════ */
 
 .card {
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
-  padding: var(--space-4);
+  padding: var(--space-5);
+  transition: border-color var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--color-border-accent);
 }
 
 .card__header {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-bottom: var(--space-3);
-  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -307,6 +312,7 @@
 .card__content {
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -316,24 +322,14 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1) var(--space-3);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
   border: 1px solid currentColor;
+  letter-spacing: 0.02em;
 }
 
-.badge--normative {
-  color: var(--color-normative);
-}
-
-.badge--informative {
-  color: var(--color-informative);
-}
-
-.badge--deprecated {
-  color: var(--color-deprecated);
-}
-
-.badge--canon {
-  color: var(--color-accent-green);
-}
+.badge--normative { color: var(--color-normative); }
+.badge--informative { color: var(--color-informative); }
+.badge--deprecated { color: var(--color-deprecated); }
+.badge--canon { color: var(--color-accent-green); }

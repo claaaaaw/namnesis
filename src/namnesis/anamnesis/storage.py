@@ -3,12 +3,12 @@ from __future__ import annotations
 import json
 import os
 import time
-import urllib.error
-import urllib.request
 from base64 import urlsafe_b64encode
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional, Protocol
+
+import httpx
 
 
 class StorageBackend(Protocol):
