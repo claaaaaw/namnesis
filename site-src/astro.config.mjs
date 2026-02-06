@@ -4,7 +4,6 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
   site: 'https://claaaaaw.github.io',
   base: '/namnesis/',
-  output: 'static',
   integrations: [
     starlight({
       title: 'NAMNESIS',
@@ -64,7 +63,6 @@ export default defineConfig({
         },
       ],
       defaultLocale: 'en',
-      social: {},
       head: [
         {
           tag: 'meta',

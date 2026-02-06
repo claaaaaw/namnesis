@@ -13,7 +13,7 @@ from eth_account import Account
 from eth_abi import encode
 
 from ..sigil.eth import get_account, load_private_key
-from .abi import load_abi
+from .abi import load_abi, load_bytecode
 from .rpc import (
     _keccak256,
     get_chain_id,
@@ -149,6 +149,81 @@ def send_contract_tx(
         private_key=private_key,
     )
     return sign_and_send(tx, private_key=private_key, wait=wait)
+
+
+def deploy_contract(
+    contract_name: str,
+    constructor_args: Optional[list] = None,
+    gas_limit: int = 3_000_000,
+    private_key: Optional[str] = None,
+    wait: bool = True,
+    timeout: int = 180,
+) -> dict:
+    """
+    Deploy a contract to the chain.
+
+    Builds a creation transaction (to=None), signs, sends, and extracts
+    the deployed contract address from the receipt.
+
+    Args:
+        contract_name: Foundry contract name (e.g., "NamnesisKernel")
+        constructor_args: Constructor arguments (default: none)
+        gas_limit: Gas limit for deployment
+        private_key: Private key for signing
+        wait: Whether to wait for receipt
+        timeout: Receipt wait timeout
+
+    Returns:
+        Dict with tx_hash, status, contract_address, receipt
+    """
+    bytecode = load_bytecode(contract_name)
+
+    # Append ABI-encoded constructor args if provided
+    deploy_data = bytecode
+    if constructor_args:
+        abi = load_abi(contract_name)
+        constructor = None
+        for entry in abi:
+            if entry.get("type") == "constructor":
+                constructor = entry
+                break
+
+        if constructor is None:
+            raise ValueError(
+                f"Constructor not found in ABI for {contract_name}, "
+                f"but constructor_args were provided."
+            )
+
+        input_types = [inp["type"] for inp in constructor.get("inputs", [])]
+        encoded_args = encode(input_types, constructor_args)
+        deploy_data = bytecode + encoded_args.hex()
+
+    # Ensure 0x prefix
+    if not deploy_data.startswith("0x"):
+        deploy_data = "0x" + deploy_data
+
+    account = get_account(private_key)
+    nonce = get_nonce(account.address)
+    gas_price = get_gas_price()
+
+    tx: dict[str, Any] = {
+        "data": deploy_data,
+        "value": 0,
+        "nonce": nonce,
+        "gas": gas_limit,
+        "gasPrice": gas_price,
+        "chainId": get_chain_id(),
+    }
+
+    result = sign_and_send(tx, private_key=private_key, wait=wait, timeout=timeout)
+
+    # Extract deployed contract address from receipt
+    if wait and result.get("receipt"):
+        contract_address = result["receipt"].get("contractAddress")
+        if contract_address:
+            result["contract_address"] = contract_address
+
+    return result
 
 
 def _encode_call(abi: list, function_name: str, args: list) -> str:
