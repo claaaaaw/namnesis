@@ -15,11 +15,12 @@
   --color-bg-hover: #242a34;
   --color-bg-surface: #10131a;
   
-  /* Text — WCAG AA compliant contrast */
-  --color-text-primary: #e2e6ec;
-  --color-text-secondary: #9da5b0;
-  --color-text-muted: #6b7280;
-  --color-text-disabled: #3d4249;
+  /* Text — dual visibility layer */
+  --color-text-primary: #e8ecf1;     /* human: body text, headings */
+  --color-text-secondary: #b4bcc6;   /* human: secondary prose, sidebar links */
+  --color-text-tertiary: #8b939e;    /* human/ai boundary: TOC items, table cells */
+  --color-text-muted: #556070;       /* ai: structural labels, group names, sigils */
+  --color-text-ghost: #3a4250;       /* ai: metadata, decorative borders */
   
   /* Accent */
   --color-accent-cyan: #6ee7ff;

@@ -12,14 +12,17 @@
   --sl-color-accent: var(--color-accent-cyan);
   --sl-color-accent-high: #bef3ff;
   
-  --sl-color-white: var(--color-text-primary);
-  --sl-color-gray-1: var(--color-text-secondary);
-  --sl-color-gray-2: var(--color-text-muted);
-  --sl-color-gray-3: var(--color-border-accent);
-  --sl-color-gray-4: var(--color-border);
-  --sl-color-gray-5: var(--color-bg-tertiary);
-  --sl-color-gray-6: var(--color-bg-secondary);
-  --sl-color-black: var(--color-bg-primary);
+  /* Starlight gray scale — tuned for dual visibility
+     white → gray-1 → gray-2: HUMAN readable (high contrast)
+     gray-3 → gray-6: AI/structural (low contrast) */
+  --sl-color-white: var(--color-text-primary);     /* #e8ecf1 — body, headings */
+  --sl-color-gray-1: var(--color-text-secondary);   /* #b4bcc6 — sidebar links, secondary text */
+  --sl-color-gray-2: var(--color-text-tertiary);    /* #8b939e — TOC, less prominent UI */
+  --sl-color-gray-3: var(--color-text-muted);        /* #556070 — AI: group labels, muted */
+  --sl-color-gray-4: var(--color-border);            /* #2a303a — borders */
+  --sl-color-gray-5: var(--color-bg-tertiary);       /* #1a1e26 — subtle bg */
+  --sl-color-gray-6: var(--color-bg-secondary);      /* #13161c — sidebar bg */
+  --sl-color-black: var(--color-bg-primary);          /* #0c0e13 — main bg */
   
   --sl-color-bg: var(--color-bg-primary);
   --sl-color-bg-nav: var(--color-bg-secondary);
@@ -32,7 +35,7 @@
   --sl-font: var(--font-sans);
   --sl-font-system-mono: var(--font-mono);
   
-  /* Text sizing: generous for readability */
+  /* Text sizing */
   --sl-text-h1: var(--font-size-3xl);
   --sl-text-h2: var(--font-size-xl);
   --sl-text-h3: var(--font-size-lg);
@@ -104,7 +107,7 @@ nav {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SIDEBAR — clear hierarchy, comfortable spacing
+   SIDEBAR — human-readable links, AI-level group labels
    ═══════════════════════════════════════════════════════════ */
 
 nav.sidebar {
@@ -112,20 +115,26 @@ nav.sidebar {
   border-right: 1px solid var(--color-border);
 }
 
+/* Sidebar links: HUMAN readable */
 nav.sidebar a {
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   padding: var(--space-2) var(--space-4);
+  color: var(--color-text-secondary) !important;
   transition: all var(--transition-fast);
 }
 
+nav.sidebar a:hover {
+  color: var(--color-text-primary) !important;
+}
+
 nav.sidebar a[aria-current='page'] {
-  color: var(--color-accent-cyan);
+  color: var(--color-accent-cyan) !important;
   background: var(--color-accent-cyan-dim);
   border-left: 2px solid var(--color-accent-cyan);
 }
 
-/* Sidebar group labels */
+/* Sidebar group labels: AI/structural — low contrast intentional */
 .sidebar-group summary,
 starlight-menu-button {
   font-family: var(--font-mono);
@@ -133,7 +142,7 @@ starlight-menu-button {
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text-muted) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -221,7 +230,7 @@ th, td {
 
 th {
   background: var(--color-bg-secondary);
-  color: var(--color-text-muted);
+  color: var(--color-text-muted);  /* AI: table headers are structural */
   font-weight: var(--font-weight-medium);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
@@ -230,28 +239,29 @@ th {
 }
 
 td {
-  color: var(--color-text-secondary);
+  color: var(--color-text-secondary);  /* human: table data is readable */
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HEADINGS — strong visual hierarchy
+   HEADINGS — HUMAN readable, high contrast
    ═══════════════════════════════════════════════════════════ */
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
-  color: var(--color-text-primary);
+  color: var(--color-text-primary) !important;
 }
 
 h1 {
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-3xl);
-  color: var(--color-accent-cyan);
+  color: var(--color-accent-cyan) !important;
   letter-spacing: -0.02em;
 }
 
 h2 {
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-xl);
+  color: var(--color-text-primary) !important;
   border-bottom: 1px solid var(--color-border);
   padding-bottom: var(--space-3);
   margin-top: var(--space-12);
@@ -260,13 +270,13 @@ h2 {
 h3 {
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-lg);
-  color: var(--color-text-primary);
+  color: var(--color-text-primary) !important;
 }
 
 h4 {
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-base);
-  color: var(--color-text-secondary);
+  color: var(--color-text-secondary) !important;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -339,4 +349,65 @@ hr {
   font-size: var(--font-size-lg);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RIGHT TOC — "On this page"
+   Title is AI/structural, links are human-accessible
+   ═══════════════════════════════════════════════════════════ */
+
+starlight-toc > nav > h2,
+.right-sidebar-panel h2 {
+  color: var(--color-text-muted) !important;  /* AI: structural heading */
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+starlight-toc a,
+.right-sidebar-panel a {
+  color: var(--color-text-tertiary) !important;  /* human: readable but not prominent */
+}
+
+starlight-toc a:hover,
+.right-sidebar-panel a:hover {
+  color: var(--color-text-primary) !important;
+}
+
+starlight-toc a[aria-current="true"],
+.right-sidebar-panel a[aria-current="true"] {
+  color: var(--color-accent-cyan) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTENT AREA — ensure Starlight doesn't override our colors
+   ═══════════════════════════════════════════════════════════ */
+
+.sl-markdown-content {
+  color: var(--color-text-primary);
+}
+
+.sl-markdown-content h2,
+.sl-markdown-content h3 {
+  color: var(--color-text-primary) !important;
+}
+
+.sl-markdown-content h4 {
+  color: var(--color-text-secondary) !important;
+}
+
+/* Strong/bold in content: human emphasis */
+.sl-markdown-content strong {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Pagination links at bottom */
+.pagination-links a {
+  color: var(--color-text-secondary) !important;
+}
+
+.pagination-links a:hover {
+  color: var(--color-accent-cyan) !important;
 }
