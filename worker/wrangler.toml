@@ -1,0 +1,37 @@
+# Namnesis Credential Service - Wrangler Configuration
+#
+# Deploy: wrangler deploy
+# Dev:    wrangler dev
+# Secrets: wrangler secret put <NAME>
+
+name = "namnesis-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# R2 bucket binding
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "<YOUR_R2_BUCKET_NAME>"
+
+# Environment variables (non-sensitive)
+[vars]
+R2_ACCOUNT_ID = "<YOUR_CLOUDFLARE_ACCOUNT_ID>"
+R2_BUCKET_NAME = "<YOUR_R2_BUCKET_NAME>"
+# On-chain contract addresses (Base Sepolia) - 来自 contracts/broadcast
+SOUL_TOKEN_ADDRESS = "0x7da34a285b8bc5def26a7204d576ad331f405200"
+SOUL_GUARD_ADDRESS = "0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4"
+# RPC endpoint for Base Sepolia (read-only calls)
+BASE_SEPOLIA_RPC = "https://sepolia.base.org"
+
+# Secrets (set via: wrangler secret put <NAME>)
+# - R2_ACCESS_KEY_ID
+# - R2_SECRET_ACCESS_KEY
+
+# Production environment
+[env.production]
+name = "namnesis-api"
+route = { pattern = "api.namnesis.dev/*", zone_name = "namnesis.dev" }
+
+# Development environment
+[env.development]
+name = "namnesis-api-dev"

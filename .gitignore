@@ -1,0 +1,36 @@
+.DS_Store
+*.pyc
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Environment variables / secrets
+.env
+!.env.example
+!conformance/fixtures/**/.env
+*.pem
+*.key
+worker/_deploy*.cmd
+
+# Node.js
+node_modules/
+dist/
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+
+# Astro
+site-src/dist/
+site-src/.astro/
+
+# Cursor IDE
+.cursor/
+cursor_chat_export/
+
+# OS files
+Thumbs.db
