@@ -97,9 +97,31 @@ def divine(soul_id: int, rpc_url: str) -> None:
         click.echo(f"  Kernel:           {kernel}")
         try:
             kernel_balance = get_balance(str(kernel))
-            click.echo(f"  Kernel Balance:   {kernel_balance / 1e18:.6f} ETH")
+            click.echo(f"  Kernel ETH:       {kernel_balance / 1e18:.6f} ETH")
         except Exception:
-            click.echo("  Kernel Balance:   (unable to read)")
+            click.echo("  Kernel ETH:       (unable to read)")
+
+        # Show Kernel USDC balance if USDC_ADDRESS is configured
+        usdc_addr = os.environ.get("USDC_ADDRESS")
+        if usdc_addr:
+            try:
+                _erc20_balance_abi = [
+                    {
+                        "type": "function",
+                        "name": "balanceOf",
+                        "inputs": [{"name": "account", "type": "address"}],
+                        "outputs": [{"name": "", "type": "uint256"}],
+                        "stateMutability": "view",
+                    },
+                ]
+                usdc_bal = read_contract(
+                    usdc_addr, "balanceOf", [str(kernel)], abi=_erc20_balance_abi
+                )
+                usdc_bal = usdc_bal or 0
+                usdc_human = usdc_bal / 1e6  # USDC has 6 decimals
+                click.echo(f"  Kernel USDC:      {usdc_human:,.6f} USDC")
+            except Exception:
+                click.echo("  Kernel USDC:      (unable to read)")
     else:
         click.echo("  Kernel:           (not registered)")
 

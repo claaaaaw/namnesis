@@ -12,8 +12,11 @@
     "generate:manifest": "node scripts/generate-manifest.mjs"
   },
   "dependencies": {
-    "astro": "^4.0.0",
-    "@astrojs/starlight": "^0.20.0"
+    "astro": "^4.16.0",
+    "@astrojs/starlight": "^0.28.0"
+  },
+  "overrides": {
+    "@astrojs/sitemap": "3.2.1"
   },
   "devDependencies": {
     "@fontsource/jetbrains-mono": "^5.0.0",

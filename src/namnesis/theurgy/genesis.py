@@ -380,7 +380,7 @@ def genesis(rpc_url: str, skip_mint: bool, skip_kernel: bool) -> None:
     click.echo(f"    1. Run 'namnesis divine --soul-id {soul_id}' to check status")
     click.echo("    2. Run 'namnesis imprint' to upload memory")
     click.echo(f"    3. Fund Kernel with testnet USDC: {kernel_address}")
-    click.echo("    4. Run 'namnesis usdc balance' to check USDC balance")
+    click.echo("    4. Run 'namnesis token balance' to check token balance")
     click.echo()
 
 

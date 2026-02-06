@@ -14,6 +14,7 @@ Commands:
   divine    - Query on-chain status
   claim     - Claim kernel after NFT transfer
   invoke    - Execute arbitrary on-chain calls
+  token     - ERC-20 token balance & transfer via Kernel
   sync      - Repair chain / identity inconsistencies
   whoami    - Show current wallet address
   info      - Show system information
@@ -100,6 +101,7 @@ from .theurgy.imprint import imprint
 from .theurgy.recall import recall
 from .theurgy.divine import divine
 from .theurgy.sync import sync
+from .theurgy.token import token
 
 cli.add_command(genesis)
 cli.add_command(imprint)
@@ -108,6 +110,7 @@ cli.add_command(divine)
 cli.add_command(claim)
 cli.add_command(invoke)
 cli.add_command(sync)
+cli.add_command(token)
 
 
 # ============ Identity ============
@@ -282,6 +285,7 @@ def info() -> None:
         ("divine  ", "Query on-chain Soul status"),
         ("claim   ", "Claim kernel after NFT transfer"),
         ("invoke  ", "Execute arbitrary on-chain call"),
+        ("token   ", "ERC-20 token balance & transfer"),
         ("sync    ", "Repair wallet / chain state"),
         ("validate", "Verify capsule integrity"),
         ("whoami  ", "Show current wallet address"),
