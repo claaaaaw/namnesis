@@ -25,10 +25,12 @@ Your workspace files (`MEMORY.md`, `memory/`, `SOUL.md`, `USER.md`, `IDENTITY.md
 |---------|---------|
 | `namnesis whoami` | Show your wallet address |
 | `namnesis info` | Show system status |
-| `namnesis genesis` | Create identity + mint Soul NFT |
+| `namnesis genesis` | Create identity + mint Soul NFT + deploy Kernel (AA wallet) |
 | `namnesis imprint` | Backup workspace to cloud |
 | `namnesis recall` | Restore workspace from cloud |
-| `namnesis divine` | Query on-chain Soul status |
+| `namnesis divine` | Query on-chain Soul status (incl. Kernel token balance) |
+| `namnesis token balance` | Check ERC-20 token balance (Kernel + EOA) |
+| `namnesis token transfer` | Transfer ERC-20 tokens from Kernel to any address |
 | `namnesis validate` | Verify capsule integrity |
 | `namnesis claim` | Claim kernel after NFT transfer |
 | `namnesis sync` | Repair chain/identity inconsistencies |
@@ -37,7 +39,7 @@ Your workspace files (`MEMORY.md`, `memory/`, `SOUL.md`, `USER.md`, `IDENTITY.md
 
 ### 1. First-time Setup (Genesis)
 
-Run this once to create your sovereign identity. Genesis auto-configures everything (wallet key, contract addresses, credential service URL):
+Run this once to create your sovereign identity. Genesis auto-configures everything (wallet key, contract addresses, credential service URL) and deploys a **NamnesisKernel** — an account-abstraction (AA) smart wallet that can hold and transfer ERC-20 tokens on your behalf:
 
 ```bash
 # Step 1: Generate wallet + auto-configure env (no ETH needed)
@@ -46,11 +48,22 @@ namnesis genesis --skip-mint
 # Step 2: Fund the address with Base Sepolia testnet ETH
 # (use the address shown by `namnesis whoami`)
 
-# Step 3: Mint Soul NFT (requires ETH)
+# Step 3: Mint Soul NFT + deploy Kernel + register with SoulGuard (requires ETH)
 namnesis genesis
 ```
 
-After genesis, note your **Soul ID** (token ID from the mint transaction). You will need it for imprint/divine/claim commands.
+The full genesis flow:
+1. Generates an ECDSA wallet (EOA) if not exists
+2. Mints a Soul NFT on-chain
+3. Deploys a NamnesisKernel smart account (AA wallet) owned by the EOA
+4. Installs the OwnableExecutor module (for SoulGuard claim support)
+5. Registers the Kernel with SoulGuard (links Kernel ↔ Soul ID)
+
+After genesis, note your **Soul ID** and **Kernel address**. The Soul ID is needed for imprint/divine/claim commands. The Kernel address is your AA wallet for holding tokens.
+
+Options:
+- `--skip-mint` — Only generate the wallet key, skip everything else
+- `--skip-kernel` — Mint Soul NFT but skip Kernel deployment
 
 ### 2. Backup Memory (Imprint)
 
@@ -95,9 +108,53 @@ Options:
 namnesis divine --soul-id <YOUR_SOUL_ID>
 ```
 
-Shows: NFT owner, kernel address, samsara cycles, memory size, last updated, and security warnings (pending claim, lobotomy risk).
+Shows: NFT owner, kernel address, kernel ETH/USDC balance, samsara cycles, memory size, last updated, and security warnings (pending claim, lobotomy risk).
 
-### 5. Validate a Capsule
+### 5. ERC-20 Token Operations (Token)
+
+The `namnesis token` commands let your Kernel (AA wallet) hold and transfer any ERC-20 token. By default it uses the USDC address from config, but you can specify any token with `--token`.
+
+#### Check Balance
+
+```bash
+# Check USDC balance (default token)
+namnesis token balance
+
+# Check balance of any ERC-20 token
+namnesis token balance --token 0xYourTokenAddress
+```
+
+Shows balance for both the EOA and the Kernel. The command automatically reads the token's `symbol()` and `decimals()` from the contract.
+
+#### Transfer Tokens
+
+```bash
+# Transfer USDC from Kernel to a recipient (default token)
+namnesis token transfer --to 0xRecipientAddress --amount 10
+
+# Transfer any ERC-20 token
+namnesis token transfer --token 0xYourTokenAddress --to 0xRecipientAddress --amount 5.5
+```
+
+How it works:
+- The Kernel smart account holds the tokens
+- The EOA signs the outer transaction and pays gas
+- Kernel calls `ERC20.transfer(to, amount)` on your behalf via `Kernel.execute()`
+- Pre-flight balance check prevents wasted gas on insufficient-balance transfers
+
+Options:
+- `--token` — ERC-20 token contract address (default: `USDC_ADDRESS` from config)
+- `--to` — Recipient address (required)
+- `--amount` — Amount in human-readable units, e.g. `1.5` (required)
+- `--gas-limit` — Gas limit (default: 300000)
+
+#### Funding Your Kernel
+
+Before transferring tokens, you need to fund your Kernel address with the tokens you want to send. Send tokens directly to your Kernel address (shown by `namnesis divine` or in `~/.namnesis/.env` as `KERNEL_ADDRESS`).
+
+For testnet USDC: https://faucet.circle.com/
+
+### 6. Validate a Capsule
 
 ```bash
 namnesis validate \
@@ -129,6 +186,18 @@ Verifies signature integrity and blob hashes without restoring files.
 2. **After transfer** — When you suspect your Soul NFT has changed hands
 3. **When asked** — When a user asks about your on-chain identity
 
+### You SHOULD run `namnesis token balance` when:
+
+1. **Before sending tokens** — To verify you have sufficient funds in the Kernel
+2. **After receiving tokens** — To confirm tokens arrived in the Kernel
+3. **When asked** — When a user asks about your token balance or wallet status
+
+### You SHOULD run `namnesis token transfer` when:
+
+1. **Payment** — When you need to send ERC-20 tokens to another address
+2. **Agent commerce** — When participating in agent-to-agent transactions
+3. **When asked** — When a user instructs you to transfer tokens
+
 ## Setting Up Automatic Backups (Cron)
 
 You can use the `cron` tool to schedule periodic backups:
@@ -158,5 +227,7 @@ This creates a daily 3 AM backup. Adjust the schedule as needed.
 - **"No wallet found"** → Run `namnesis genesis` first
 - **"Address has zero balance"** → Fund the address with Base Sepolia testnet ETH
 - **"SOUL_TOKEN_ADDRESS not set"** → Add it to `~/.namnesis/.env`
+- **"KERNEL_ADDRESS not set"** → Run `namnesis genesis` to deploy a Kernel, or set `KERNEL_ADDRESS` in `~/.namnesis/.env`
+- **"Insufficient balance"** → Fund your Kernel with the token you want to transfer (send tokens to the Kernel address)
 - **"Validation failed"** → The capsule was tampered with or the signer doesn't match
 - **Chain update failed** → Memory was still uploaded; run `namnesis sync` to retry
