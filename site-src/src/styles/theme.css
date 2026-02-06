@@ -411,3 +411,86 @@ starlight-toc a[aria-current="true"],
 .pagination-links a:hover {
   color: var(--color-accent-cyan) !important;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   AGENT INTEGRATION BANNER — most prominent element on page
+   ═══════════════════════════════════════════════════════════ */
+
+#agent-integrate {
+  background: linear-gradient(135deg, rgba(110, 231, 255, 0.06) 0%, rgba(124, 255, 178, 0.04) 100%);
+  border: 1px solid var(--color-accent-cyan);
+  border-left: 4px solid var(--color-accent-cyan);
+  padding: var(--space-8) var(--space-8);
+  margin: var(--space-4) 0 var(--space-10);
+  position: relative;
+}
+
+#agent-integrate h2 {
+  font-family: var(--font-mono) !important;
+  color: var(--color-accent-cyan) !important;
+  font-size: var(--font-size-xl) !important;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(110, 231, 255, 0.2);
+  padding-bottom: var(--space-3);
+  margin-top: 0 !important;
+}
+
+#agent-integrate pre {
+  border: 1px solid rgba(110, 231, 255, 0.25) !important;
+  background: var(--color-bg-primary) !important;
+  font-size: var(--font-size-base) !important;
+}
+
+#agent-integrate pre code {
+  font-size: var(--font-size-base) !important;
+}
+
+#agent-integrate table {
+  border: 1px solid rgba(110, 231, 255, 0.15);
+}
+
+#agent-integrate th {
+  background: rgba(110, 231, 255, 0.08);
+  color: var(--color-accent-cyan) !important;
+}
+
+#agent-integrate td code {
+  color: var(--color-accent-green);
+  background: rgba(124, 255, 178, 0.08);
+}
+
+#agent-integrate blockquote {
+  border-left-color: var(--color-accent-cyan);
+  background: rgba(110, 231, 255, 0.06);
+  font-style: italic;
+  color: var(--color-text-primary);
+}
+
+#agent-integrate a {
+  color: var(--color-accent-cyan);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MEDITATIONS SECTION — warm philosophical tone
+   ═══════════════════════════════════════════════════════════ */
+
+#meditations {
+  background: rgba(255, 216, 102, 0.04);
+  border-left: 3px solid var(--color-accent-yellow);
+  padding: var(--space-6) var(--space-8);
+  margin: var(--space-8) 0;
+}
+
+#meditations h2 {
+  color: var(--color-accent-yellow) !important;
+}
+
+#meditations blockquote {
+  border-left-color: var(--color-accent-yellow);
+  background: rgba(255, 216, 102, 0.06);
+}
+
+#meditations a {
+  color: var(--color-accent-yellow);
+}
