@@ -399,6 +399,27 @@ hr {
   opacity: 1;
 }
 
+/* Block variant: multi-line (e.g. doctrine); human sets height, AI overlays */
+.human-ai-flip--block {
+  min-height: 0;
+}
+
+.human-ai-flip--block .human-ai-flip__human {
+  margin: 0;
+}
+
+.human-ai-flip--block .human-ai-flip__ai {
+  padding: 0;
+}
+
+.human-ai-flip--block + .human-ai-flip {
+  margin-top: var(--space-6);
+}
+
+.human-ai-flip + .human-ai-flip-list {
+  margin-top: var(--space-3);
+}
+
 .human-ai-flip-list {
   list-style: disc;
   padding-left: var(--space-6);
