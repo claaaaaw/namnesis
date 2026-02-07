@@ -10,7 +10,7 @@ Principle: **Every human-facing section has a corresponding machine-stable ancho
 - `#axioms` — axioms/vows
 - `#machine-layer` — canonical machine block
 - `#proofs` — verifiable claims (hashes/refs)
-- `#rituals` — "how to invoke / integrate" (Genesis / Imprint / Recall / Divine / Claim)
+- `#rituals` — "how to invoke / integrate" (Genesis / Imprint / Anamnesis / Divine / Claim)
 - `#threat-model` — what it is / is not
 - `#changelog` — releases/spec revisions
 - `#contact` — optional (framed as "Witness channel")

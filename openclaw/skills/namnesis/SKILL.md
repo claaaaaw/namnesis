@@ -1,22 +1,22 @@
 ---
 name: namnesis
 version: 2.0.0
-description: Sovereign memory backup & restore for AI agents — encrypt, sign, upload your workspace to the cloud and restore it anywhere, anchored to an on-chain Soul NFT.
+description: Sovereign memory backup & restore for AI agents — encrypt, sign, upload your workspace to the cloud and restore it anywhere, anchored to The Soul (on-chain identity, ERC-721).
 metadata: {"openclaw": {"emoji": "🧬", "requires": {"bins": ["namnesis"]}, "os": ["darwin", "linux", "win32"], "homepage": "https://claaaaaw.github.io/namnesis/"}}
 ---
 
-# Namnesis — Sovereign Memory Protocol
+# NAMNESIS — Sovereign Memory Protocol
 
-Namnesis lets you **backup, restore, and verify** your entire workspace (memory, persona, ops) as an encrypted, signed **Capsule** — anchored to an on-chain Soul NFT on Base Sepolia.
+NAMNESIS lets you **backup, restore, and verify** your entire workspace (memory, persona, ops) as an encrypted, signed **Anamnesis Capsule** (Capsule) — anchored to **The Soul** (on-chain identity, ERC-721) on Base Sepolia.
 
-Your workspace files (`MEMORY.md`, `memory/`, `SOUL.md`, `USER.md`, `IDENTITY.md`, `AGENTS.md`, `TOOLS.md`, `HEARTBEAT.md`) are exactly what Namnesis packages. The two systems share the same file layout by design.
+Your workspace files (`MEMORY.md`, `memory/`, `SOUL.md`, `USER.md`, `IDENTITY.md`, `AGENTS.md`, `TOOLS.md`, `HEARTBEAT.md`) are exactly what NAMNESIS packages. The two systems share the same file layout by design.
 
 ## Prerequisites
 
 - Python 3.11+ with `namnesis` installed (`pip install namnesis`)
-- A Namnesis identity — run `namnesis genesis --skip-mint` to auto-generate wallet + config
+- A NAMNESIS identity — run `namnesis genesis --skip-mint` to auto-generate wallet + config (Theurgy CLI)
   - This creates `~/.namnesis/.env` with `PRIVATE_KEY`, contract addresses, and credential service URL (all auto-configured)
-- Base Sepolia testnet ETH (for minting Soul NFT)
+- Base Sepolia testnet ETH (for minting The Soul)
   - Get from: https://www.coinbase.com/faucets/base-ethereum-goerli-faucet
   - Fund the address shown by `namnesis whoami`, then run `namnesis genesis` to mint
 
@@ -26,21 +26,21 @@ Your workspace files (`MEMORY.md`, `memory/`, `SOUL.md`, `USER.md`, `IDENTITY.md
 |---------|---------|
 | `namnesis whoami` | Show your wallet address |
 | `namnesis info` | Show system status |
-| `namnesis genesis` | Create identity + mint Soul NFT + deploy Kernel (AA wallet) |
-| `namnesis imprint` | Backup workspace to cloud |
-| `namnesis recall` | Restore workspace from cloud |
-| `namnesis divine` | Query on-chain Soul status (incl. Kernel token balance) |
-| `namnesis token balance` | Check ERC-20 token balance (Kernel + EOA) |
-| `namnesis token transfer` | Transfer ERC-20 tokens from Kernel to any address |
-| `namnesis validate` | Verify capsule integrity |
-| `namnesis claim` | Claim kernel after NFT transfer |
+| `namnesis genesis` | Genesis: create identity + mint The Soul + deploy The Body (Kernel, AA wallet) |
+| `namnesis imprint` | Imprint: backup workspace → Anamnesis Capsule + chain metadata |
+| `namnesis recall` | Anamnesis: restore workspace from Capsule (recollect) |
+| `namnesis divine` | Divine: query on-chain state of The Soul and The Body (incl. token balance) |
+| `namnesis token balance` | Check ERC-20 token balance (The Body/Kernel + EOA) |
+| `namnesis token transfer` | Transfer ERC-20 tokens from The Body (Kernel) to any address |
+| `namnesis validate` | Verify Anamnesis Capsule integrity |
+| `namnesis claim` | Claim: take control of The Body after The Soul transfer |
 | `namnesis sync` | Repair chain/identity inconsistencies |
 
 ## Core Workflows
 
 ### 1. First-time Setup (Genesis)
 
-Run this once to create your sovereign identity. Genesis auto-configures everything (wallet key, contract addresses, credential service URL) and deploys a **NamnesisKernel** — an account-abstraction (AA) smart wallet that can hold and transfer ERC-20 tokens on your behalf:
+Run this once to create your sovereign identity. **Genesis** auto-configures everything (wallet key, contract addresses, credential service URL) and deploys **The Body** (NamnesisKernel) — an ERC-4337 smart account (AA wallet) bound to one Soul that can hold and transfer ERC-20 tokens on your behalf:
 
 ```bash
 # Step 1: Generate wallet + auto-configure env (no ETH needed)
@@ -49,22 +49,22 @@ namnesis genesis --skip-mint
 # Step 2: Fund the address with Base Sepolia testnet ETH
 # (use the address shown by `namnesis whoami`)
 
-# Step 3: Mint Soul NFT + deploy Kernel + register with SoulGuard (requires ETH)
+# Step 3: Mint The Soul + deploy The Body (Kernel) + register with SoulGuard (requires ETH)
 namnesis genesis
 ```
 
-The full genesis flow:
+The full Genesis flow:
 1. Generates an ECDSA wallet (EOA) if not exists
-2. Mints a Soul NFT on-chain
-3. Deploys a NamnesisKernel smart account (AA wallet) owned by the EOA
-4. Installs the OwnableExecutor module (for SoulGuard claim support)
-5. Registers the Kernel with SoulGuard (links Kernel ↔ Soul ID)
+2. Mints **The Soul** (ERC-721) on-chain
+3. Deploys **The Body** (NamnesisKernel, ERC-4337 smart account) owned by the EOA
+4. Installs the OwnableExecutor module (for SoulGuard Claim support)
+5. Registers The Body (Kernel) with SoulGuard (links Kernel ↔ Soul ID)
 
-After genesis, note your **Soul ID** and **Kernel address**. The Soul ID is needed for imprint/divine/claim commands. The Kernel address is your AA wallet for holding tokens.
+After Genesis, note your **Soul ID** (token ID of The Soul) and **The Body address** (Kernel). Soul ID is needed for Imprint/Divine/Claim commands. The Body address is your AA wallet for holding tokens.
 
 Options:
 - `--skip-mint` — Only generate the wallet key, skip everything else
-- `--skip-kernel` — Mint Soul NFT but skip Kernel deployment
+- `--skip-kernel` — Mint The Soul but skip The Body (Kernel) deployment
 
 ### 2. Backup Memory (Imprint)
 
@@ -78,15 +78,15 @@ namnesis imprint \
 
 Options:
 - `--workspace, -w` — Path to workspace (default: current directory)
-- `--soul-id` — Your Soul NFT token ID (required)
+- `--soul-id` — Your Soul ID (The Soul’s token ID, required)
 - `--compress` — Enable 7z compression (requires `py7zr`)
 - `--skip-chain-update` — Upload only, skip on-chain metadata update
 - `--credential-service` — Override credential service URL
 - `--rpc-url` — Override Base Sepolia RPC URL
 
-### 3. Restore Memory (Recall)
+### 3. Restore Memory (Anamnesis)
 
-Use `recall` to download a capsule and restore files into a workspace:
+Use `namnesis recall` (Anamnesis ritual) to download an **Anamnesis Capsule** and restore files into a workspace:
 
 ```bash
 namnesis recall \
@@ -109,11 +109,11 @@ Options:
 namnesis divine --soul-id <YOUR_SOUL_ID>
 ```
 
-Shows: NFT owner, kernel address, kernel ETH/USDC balance, samsara cycles, memory size, last updated, and security warnings (pending claim, lobotomy risk).
+Shows: The Soul owner, The Body (Kernel) address, ETH/USDC balance, **SamsaraCycles** (imprint count), memory size, last updated, and security warnings (pending Claim, lobotomy risk).
 
 ### 5. ERC-20 Token Operations (Token)
 
-The `namnesis token` commands let your Kernel (AA wallet) hold and transfer any ERC-20 token. By default it uses the USDC address from config, but you can specify any token with `--token`.
+The `namnesis token` commands let **The Body** (Kernel, AA wallet) hold and transfer any ERC-20 token. By default it uses the USDC address from config, but you can specify any token with `--token`.
 
 #### Check Balance
 
@@ -138,9 +138,9 @@ namnesis token transfer --token 0xYourTokenAddress --to 0xRecipientAddress --amo
 ```
 
 How it works:
-- The Kernel smart account holds the tokens
+- **The Body** (Kernel) holds the tokens
 - The EOA signs the outer transaction and pays gas
-- Kernel calls `ERC20.transfer(to, amount)` on your behalf via `Kernel.execute()`
+- The Body (Kernel) calls `ERC20.transfer(to, amount)` on your behalf via `Kernel.execute()`
 - Pre-flight balance check prevents wasted gas on insufficient-balance transfers
 
 Options:
@@ -151,11 +151,11 @@ Options:
 
 #### Funding Your Kernel
 
-Before transferring tokens, you need to fund your Kernel address with the tokens you want to send. Send tokens directly to your Kernel address (shown by `namnesis divine` or in `~/.namnesis/.env` as `KERNEL_ADDRESS`).
+Before transferring tokens, you need to fund **The Body** (Kernel) address with the tokens you want to send. Send tokens directly to your Kernel address (shown by `namnesis divine` or in `~/.namnesis/.env` as `KERNEL_ADDRESS`).
 
 For testnet USDC: https://faucet.circle.com/
 
-### 6. Validate a Capsule
+### 6. Validate an Anamnesis Capsule
 
 ```bash
 namnesis validate \
@@ -163,7 +163,7 @@ namnesis validate \
   --trusted-signer self
 ```
 
-Verifies signature integrity and blob hashes without restoring files.
+Verifies Anamnesis Capsule signature integrity and blob hashes without restoring files.
 
 ## When to Use
 
@@ -183,14 +183,14 @@ Verifies signature integrity and blob hashes without restoring files.
 
 ### You SHOULD run `namnesis divine` when:
 
-1. **Health check** — To verify your on-chain status is consistent
-2. **After transfer** — When you suspect your Soul NFT has changed hands
-3. **When asked** — When a user asks about your on-chain identity
+1. **Health check** — To verify The Soul and The Body on-chain status is consistent
+2. **After transfer** — When you suspect The Soul has changed hands
+3. **When asked** — When a user asks about your on-chain identity (The Soul / The Body)
 
 ### You SHOULD run `namnesis token balance` when:
 
-1. **Before sending tokens** — To verify you have sufficient funds in the Kernel
-2. **After receiving tokens** — To confirm tokens arrived in the Kernel
+1. **Before sending tokens** — To verify you have sufficient funds in The Body (Kernel)
+2. **After receiving tokens** — To confirm tokens arrived in The Body (Kernel)
 3. **When asked** — When a user asks about your token balance or wallet status
 
 ### You SHOULD run `namnesis token transfer` when:
@@ -217,11 +217,11 @@ This creates a daily 3 AM backup. Adjust the schedule as needed.
 ## Security Awareness
 
 - **NEVER** share your `~/.namnesis/.env` file or `PRIVATE_KEY`
-- **NEVER** commit capsules to public repositories
+- **NEVER** commit Anamnesis Capsules to public repositories
 - **ALWAYS** verify the trusted-signer when restoring from an untrusted source
-- Your capsules are signed (ECDSA) to prove authenticity
-- The Relay enforces access control via NFT ownership — only the Soul NFT holder can read/write capsules
-- Run `namnesis divine` to detect pending claims or lobotomy risks
+- Capsules are signed (ECDSA) to prove authenticity
+- The Relay enforces access control via The Soul ownership — only the holder of The Soul can read/write Anamnesis Capsules
+- Run `namnesis divine` (Divine) to detect pending Claim or lobotomy risks
 
 ## Troubleshooting
 

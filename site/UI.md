@@ -35,4 +35,4 @@
 - Sharp borders, thin rules, strict rhythm
 - Avoid rounded corners and friendly spacing
 - The site should feel like a **protocol**, not a product page
-- Navigation uses Namnesis lexicon: SPEC, MACHINE, MEDITATIONS, CONFORMANCE
+- Navigation uses NAMNESIS lexicon: SPEC, MACHINE, MEDITATIONS, CONFORMANCE

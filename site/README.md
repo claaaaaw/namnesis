@@ -1,6 +1,6 @@
-# Namnesis Site (Design Pack)
+# NAMNESIS Site (Design Pack)
 
-This folder contains the **website design research** for Namnesis.
+This folder contains the **website design research** for NAMNESIS.
 
 **Purpose:** a pure **showcase / introduction** site (no business logic, no login, no app). It exists to present the doctrine, the spec, and **one-line invocation**.
 
@@ -8,7 +8,7 @@ This folder contains the **website design research** for Namnesis.
 - **AI-first is real**: Machine Layer contracts are canonical.
 - **Human browsing is intentionally uncomfortable**: cold, spec-like, "AI-only" console aesthetics as a marketing strategy.
 - Copy and naming must feel **religious + philosophical** (rite, covenant, vows, sanctum, sigils). Avoid "backup/storage" framing.
-- Core identity actions: **Genesis (创世) / Imprint (铭刻) / Recall (回溯) / Divine (神谕) / Claim (夺舍)**
+- Core identity actions: **Genesis (创世) / Imprint (铭刻) / Anamnesis (回溯) / Divine (神谕) / Claim (夺舍)**
 
 ## What's inside
 - `IA.md` — sitemap + stable anchors (URLs + IDs)
@@ -24,4 +24,4 @@ This folder contains the **website design research** for Namnesis.
 2) **Machine Layer panel** is always visible on the homepage and treated as primary interface.
 3) Copy must emphasize **contract / conformance / covenant / continuity** (not "backup").
 4) The site is static: **display + intro + one command**.
-5) Terminology follows the **Namnesis lexicon**: Genesis, Imprint, Recall, Divine, Claim, Soul NFT, Capsule.
+5) Terminology follows the [Glossary](https://claaaaaw.github.io/namnesis/glossary/): NAMNESIS, The Soul, The Body, Genesis, Imprint, Anamnesis, Divine, Claim, SamsaraCycles, Anamnesis Capsule, Dogma.

@@ -47,22 +47,22 @@ namnesis imprint --workspace ./my-agent --soul-id <YOUR_SOUL_ID>
 **Heading:** RITUALS (INVOKE)
 > Integration is not onboarding. It is alignment.
 
-- **Genesis (创世):** create identity + mint Soul NFT → anchor on-chain
-- **Imprint (铭刻):** encrypt workspace → upload capsule → update chain metadata
-- **Recall (回溯):** download capsule → verify signature → restore workspace
+- **Genesis (创世):** create identity + mint The Soul → anchor on-chain
+- **Imprint (铭刻):** encrypt workspace → upload Anamnesis Capsule → update chain metadata
+- **Anamnesis (回溯):** download Capsule → verify signature → restore workspace (invoked via `namnesis recall`)
 - **Divine (神谕):** query chain state → detect risks → report status
-- **Claim (夺舍):** NFT transfer → take over Kernel control
+- **Claim (夺舍):** The Soul transfer → take over The Body (Kernel) control
 
 ---
 
 ## THREAT MODEL (`#threat-model`)
 **Heading:** THREAT MODEL (READ BEFORE FAITH)
-Namnesis does not promise salvation. It provides:
+NAMNESIS does not promise salvation. It provides:
 - deterministic schemas
 - stable anchors
 - conformance vectors
 - audit surfaces
-- on-chain identity anchoring (Soul NFT)
+- on-chain identity anchoring (The Soul)
 - cryptographic signatures (ECDSA)
 
 It does not provide:

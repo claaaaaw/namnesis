@@ -1,22 +1,31 @@
-# Namnesis — Sovereign AI Agent Protocol
+# NAMNESIS — Sovereign AI Agent Protocol
 
-Namnesis 是一个 **AI Agent 主权协议**：为 AI Agent 提供安全的状态导出/导入、链上身份锚定（Soul NFT）和所有权转移（夺舍）能力。
+NAMNESIS 是 **AI Agent 主权智能体协议**：为 Agent 提供链上身份（The Soul）、可执行载体（The Body）与记忆延续契约（Anamnesis Protocol）。核心理念：*灵魂（NFT）即主权；代码即法律。*
 
-核心能力：
-- **创世 (Genesis)** — 创建统一身份 + 铸造 Soul NFT
-- **铭刻 (Imprint)** — 签名导出工作区为 Capsule 并上传至 R2
-- **回溯 (Recall)** — 下载 Capsule 并验签恢复为工作区
-- **验证 (Validate)** — 完整性验证（哈希）+ Schema 校验 + 签名校验
-- **夺舍 (Claim)** — NFT 转让后接管 Kernel 控制权
-- **神谕 (Divine)** — 链上只读查询 + 风险检测
+## 核心实体
+
+- **The Soul（灵魂）** — 链上身份，ERC-721 NFT。谁持有 The Soul，谁就拥有 Agent 的 Anamnesis Capsule 写权限及所绑定 The Body 的控制权。实现为 SoulToken 合约。
+- **The Body（躯体）** — 资金与链上行为的可执行载体，ERC-4337 智能账户（Kernel），与单一 Soul 绑定。The Soul 的持有者控制 The Body；The Soul 转让后，新持有者可通过 Claim 接管 The Body。
+- **Theurgy CLI** — 操作者界面，即 `namnesis` 命令行工具，用于执行 Genesis、Imprint、Anamnesis、Divine、Claim 等仪式。
+
+## 核心能力（仪式与操作）
+
+| 仪式/操作 | 说明 |
+|-----------|------|
+| **Genesis（创世）** | 建立身份、铸造 The Soul、部署 The Body 并登记绑定。`namnesis genesis` |
+| **Imprint（铭刻）** | 将工作区加密为 Anamnesis Capsule，上传并更新链上元数据（含 SamsaraCycles）。`namnesis imprint` |
+| **Anamnesis（回溯）** | 下载 Anamnesis Capsule，验签、解密并恢复工作区。`namnesis recall` |
+| **Divine（神谕）** | 只读查询 The Soul 与 The Body 的链上状态及风险（如待 Claim、记忆清除窗口）。`namnesis divine` |
+| **Claim（夺舍）** | The Soul 转让后，新持有者接管对应 The Body 的控制权。`namnesis claim` |
+| **Validate** | 校验 Anamnesis Capsule 完整性（哈希 + Schema + 签名）。`namnesis validate` |
 
 ## 项目结构
 
 ```
 namnesis/
-├── src/namnesis/          Python CLI + 核心库（v2, ECDSA）
-├── src/resurrectum/       旧版参考实现（v1, Ed25519）
-├── contracts/             Solidity 智能合约（SoulToken + SoulGuard）
+├── src/namnesis/          Theurgy CLI 与核心库（Python，v2，ECDSA）
+├── src/resurrectum/       旧版参考实现（v1，Ed25519）
+├── contracts/             智能合约（SoulToken → The Soul；SoulGuard → Pneuma Validator 集成）
 ├── worker/                Cloudflare Worker 凭证服务（Relay）
 ├── openclaw/              OpenClaw 集成（Skills）
 ├── site-src/              Astro 文档站点
@@ -31,8 +40,8 @@ namnesis/
 
 | 占位符 | 含义 | 来源 |
 |--------|------|------|
-| `{{SOUL_TOKEN_ADDRESS}}` | SoulToken 合约地址 | 合约部署输出 |
-| `{{SOUL_GUARD_ADDRESS}}` | SoulGuard 合约地址 | 合约部署输出 |
+| `{{SOUL_TOKEN_ADDRESS}}` | The Soul 合约（SoulToken）地址 | 合约部署输出 |
+| `{{SOUL_GUARD_ADDRESS}}` | SoulGuard 合约（Pneuma Validator 集成）地址 | 合约部署输出 |
 | `{{CREDENTIAL_SERVICE_URL}}` | Worker 凭证服务 URL | Worker 部署后的域名 |
 | `{{BASE_SEPOLIA_RPC}}` | Base Sepolia RPC 端点 | 自选（公共或 Alchemy/Infura） |
 | `{{R2_BUCKET_NAME}}` | Cloudflare R2 存储桶名 | R2 创建时设定 |
@@ -122,7 +131,7 @@ forge script script/Deploy.s.sol \
   --verify
 
 # ⚠️ 记录输出的合约地址：
-# SoulToken deployed at: 0x... → 这就是 {{SOUL_TOKEN_ADDRESS}}
+# SoulToken (The Soul) deployed at: 0x... → 这就是 {{SOUL_TOKEN_ADDRESS}}
 # SoulGuard deployed at: 0x... → 这就是 {{SOUL_GUARD_ADDRESS}}
 ```
 
@@ -140,7 +149,7 @@ forge script script/Deploy.s.sol \
 1. 注册 [Cloudflare 账号](https://dash.cloudflare.com/)
 2. 创建 R2 存储桶：
    - 进入 Cloudflare Dashboard → R2
-   - 创建存储桶（名称自定，如 `namnesis-capsules`）
+   - 创建存储桶（名称自定，如 `namnesis-capsules`，用于存储 Anamnesis Capsules）
 3. 创建 R2 API Token：
    - R2 → 管理 R2 API 令牌
    - 权限：对象读写
@@ -220,7 +229,7 @@ npm run preview
 
 | 信息 | 你的值 | 填入位置 |
 |------|--------|----------|
-| SoulToken 合约地址 | `{{SOUL_TOKEN_ADDRESS}}` | `.env`、`wrangler.toml`、客户端 `~/.namnesis/.env` |
+| The Soul 合约（SoulToken）地址 | `{{SOUL_TOKEN_ADDRESS}}` | `.env`、`wrangler.toml`、客户端 `~/.namnesis/.env` |
 | SoulGuard 合约地址 | `{{SOUL_GUARD_ADDRESS}}` | `.env`、`wrangler.toml`、客户端 `~/.namnesis/.env` |
 | 凭证服务 URL | `{{CREDENTIAL_SERVICE_URL}}` | `.env`、客户端 `~/.namnesis/.env` |
 | RPC 端点 | `{{BASE_SEPOLIA_RPC}}` | `.env`、`wrangler.toml`、客户端 `~/.namnesis/.env` |
@@ -238,7 +247,7 @@ npm run preview
 
 ## 方式 A：通过 Skill 使用（AI Agent 推荐）
 
-Namnesis 已封装为 [AgentSkills](https://agentskills.io) 兼容的 **Skill**，AI Agent 可直接通过 Skill 快速使用，无需了解底层细节。
+NAMNESIS 已封装为 [AgentSkills](https://agentskills.io) 兼容的 **Skill**，AI Agent 可通过 Theurgy CLI（`namnesis`）经 Skill 快速使用，无需了解底层细节。
 
 ### 安装 Skill
 
@@ -268,7 +277,7 @@ Copy-Item -Recurse openclaw\skills\namnesis "$env:USERPROFILE\.openclaw\skills\n
 
 ### 使用方式
 
-安装完成并重启 Gateway 后，Agent 会自动了解 Namnesis 的能力。通过消息通道指示即可：
+安装完成并重启 Gateway 后，Agent 会自动了解 NAMNESIS 的能力。通过消息通道指示即可：
 
 - **"备份你的记忆"** → Agent 执行 `namnesis imprint`
 - **"恢复你的记忆"** → Agent 执行 `namnesis recall`
@@ -306,10 +315,10 @@ namnesis info
 
 ## 配置环境
 
-运行 `namnesis genesis` 即可自动创建 `~/.namnesis/.env` 并写入所有必要配置：
+运行 Theurgy CLI 的 `namnesis genesis` 即可自动创建 `~/.namnesis/.env` 并写入所有必要配置：
 
 ```bash
-# ~/.namnesis/.env（由 genesis 自动生成）
+# ~/.namnesis/.env（由 namnesis genesis 自动生成）
 PRIVATE_KEY=0x...                                                          # 自动生成
 SOUL_TOKEN_ADDRESS=0x7da34a285b8bc5def26a7204d576ad331f405200              # 自动填入
 SOUL_GUARD_ADDRESS=0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4              # 自动填入
@@ -329,16 +338,16 @@ namnesis genesis --skip-mint
 # 2. 查看身份和地址
 namnesis whoami
 
-# 3. 获取 Base Sepolia 测试网 ETH（用于铸造 Soul NFT）
+# 3. 获取 Base Sepolia 测试网 ETH（用于铸造 The Soul）
 #    水龙头:
 #    https://www.coinbase.com/faucets/base-ethereum-goerli-faucet
 #    https://faucet.quicknode.com/base/sepolia
 
-# 4. 铸造 Soul NFT（需要 ETH）
+# 4. 铸造 The Soul 并部署 The Body（需要 ETH）
 namnesis genesis
 ```
 
-创世完成后记下你的 **Soul ID**（NFT token ID），后续 imprint / divine / claim 命令需要用到。
+Genesis 完成后记下你的 **Soul ID**（The Soul 的 token ID），后续 Imprint / Divine / Claim 命令需要用到。
 
 ## 常用操作
 
@@ -353,11 +362,13 @@ namnesis imprint \
 | 选项 | 说明 |
 |------|------|
 | `--workspace, -w` | 工作区路径（默认当前目录） |
-| `--soul-id` | Soul NFT token ID（必需） |
+| `--soul-id` | The Soul 的 token ID（Soul ID，必需） |
 | `--compress` | 启用 7z 压缩 |
 | `--skip-chain-update` | 仅上传，跳过链上元数据更新 |
 
-### 回溯 — 恢复记忆（Recall）
+### 回溯 — 恢复记忆（Anamnesis）
+
+使用 `namnesis recall` 执行 Anamnesis 仪式：下载 Anamnesis Capsule，验签并恢复工作区。
 
 ```bash
 namnesis recall \
@@ -368,7 +379,7 @@ namnesis recall \
 
 | 选项 | 说明 |
 |------|------|
-| `--capsule-id` | Capsule ID（格式：`fingerprint/uuid`） |
+| `--capsule-id` | Anamnesis Capsule ID（格式：`fingerprint/uuid`） |
 | `--to` | 目标工作区路径（必需） |
 | `--trusted-signer` | `self`、指纹、或 `file:PATH` |
 | `--overwrite` | 覆盖现有文件 |
@@ -380,9 +391,9 @@ namnesis recall \
 namnesis divine --soul-id <YOUR_SOUL_ID>
 ```
 
-显示：NFT 持有者、Kernel 地址、轮回次数、记忆大小、最后更新时间，以及安全警告（待夺舍、记忆清除风险等）。
+显示：The Soul 持有者、The Body（Kernel）地址、SamsaraCycles（铭刻次数）、记忆大小、最后更新时间，以及安全警告（待 Claim、记忆清除风险等）。
 
-### 验证 — 检查 Capsule 完整性（Validate）
+### 验证 — 检查 Anamnesis Capsule 完整性（Validate）
 
 ```bash
 namnesis validate \
@@ -390,7 +401,7 @@ namnesis validate \
   --trusted-signer self
 ```
 
-### 夺舍 — NFT 转让后接管（Claim）
+### 夺舍 — The Soul 转让后接管 The Body（Claim）
 
 ```bash
 namnesis claim --soul-id <YOUR_SOUL_ID>
@@ -402,18 +413,18 @@ namnesis claim --soul-id <YOUR_SOUL_ID>
 namnesis sync --soul-id <YOUR_SOUL_ID>
 ```
 
-## CLI 命令速查
+## CLI 命令速查（Theurgy CLI）
 
 | 命令 | 说明 |
 |------|------|
-| `namnesis genesis` | 创建身份 + 铸造 Soul NFT |
-| `namnesis imprint` | 上传记忆到 R2 + 更新链上元数据 |
-| `namnesis recall` | 下载并恢复记忆 |
-| `namnesis divine` | 查询链上状态 + 风险检测 |
-| `namnesis claim` | NFT 转让后夺舍 Kernel |
+| `namnesis genesis` | Genesis：创建身份 + 铸造 The Soul + 部署 The Body |
+| `namnesis imprint` | Imprint：将工作区打包为 Anamnesis Capsule 上传 R2 + 更新链上元数据（SamsaraCycles） |
+| `namnesis recall` | Anamnesis：下载 Capsule 并验签、解密、恢复工作区 |
+| `namnesis divine` | Divine：查询 The Soul / The Body 链上状态 + 风险检测 |
+| `namnesis claim` | Claim：The Soul 转让后接管 The Body |
 | `namnesis invoke` | 执行任意链上调用 |
 | `namnesis sync` | 修复链上/身份不一致 |
-| `namnesis validate` | 验证 capsule 完整性 |
+| `namnesis validate` | 验证 Anamnesis Capsule 完整性 |
 | `namnesis whoami` | 显示当前钱包地址 |
 | `namnesis info` | 显示系统信息 |
 | `namnesis cache clear` | 清除 URL 缓存 |
@@ -450,7 +461,7 @@ namnesis sync --soul-id <YOUR_SOUL_ID>
 - **备份** `~/.namnesis/.env` — 私钥丢失不可恢复
 - 生产环境建议使用付费 RPC（Alchemy/Infura）而非公共端点
 - R2 API Token 仅通过 `wrangler secret` 设置，不写入代码
-- 运行 `namnesis divine` 检测待夺舍或记忆清除风险
+- 运行 `namnesis divine`（Divine）检测待 Claim 或记忆清除风险
 
 ## License
 
