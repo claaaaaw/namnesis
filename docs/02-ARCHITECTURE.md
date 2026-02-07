@@ -1,149 +1,132 @@
-# Namnesis — 系统架构
+# Namnesis — System Architecture
 
-**受众:** AI 工程师  
-**版本:** v2.0
+**Audience:** AI engineers  
+**Version:** v2.0
 
-## 0. 设计约束
+## 0. Design Constraints
 
-| 原则 | 说明 |
-|------|------|
-| **客户端优先** | 所有业务逻辑（加密/签名/验证/链上交易）在客户端执行 |
-| **服务端无状态** | 凭证服务无数据库、无 KV、无持久状态 |
-| **存储不可信** | E2EE 加密，远程存储可完全不可信 |
-| **客户端付 Gas** | 所有链上交易（genesis/claim/updateMetadata）由客户端 EOA 直接发送 |
-| **统一身份** | 用户感知一个身份，底层自动管理 Ed25519 + ECDSA 双密钥 |
-| **去中心化就绪** | 架构设计便于未来迁移到 IPFS/去中心化存储 |
+| Principle | Description |
+|-----------|-------------|
+| **Client-first** | All business logic (signing, verification, chain tx) runs on the client |
+| **Server stateless** | Credential service has no DB, no KV, no persistent state |
+| **Storage access gated** | Relay enforces NFT ownership; presigned URLs limit who can read/write |
+| **Client pays gas** | All chain tx (genesis, claim, updateMetadata) sent by client EOA |
+| **Single identity** | User sees one identity; one ECDSA wallet for chain + Relay + manifest signing |
+| **Decentralization-ready** | Design allows future migration to IPFS / decentralized storage |
 
-## 1. 系统概述
+## 1. System Overview
 
-### 1.1 架构总图
+### 1.1 Architecture Diagram
 
 ```
-                            用户 / AI Agent
-                                  │
-                    ┌─────────────┼─────────────┐
-                    │             │             │
-                    ▼             ▼             ▼
-            ┌─────────────┐ ┌─────────┐ ┌──────────┐
-            │  Namnesis   │ │  Base   │ │  Relay   │
-            │  CLI        │ │ Sepolia │ │ (无状态)  │
-            │             │ │  链上    │ │          │
-            │ • 加密/解密  │ │         │ │ • 验签   │
-            │ • 签名/验证  │ │ Soul NFT│ │ • 权限   │
-            │ • 链上交易   │ │ SoulGuard│ │ • 发凭证 │
-            └──────┬──────┘ └────┬────┘ └────┬─────┘
-                   │             │           │
-                   │             │           ▼
-                   │             │    ┌──────────────┐
-                   └─────────────┴───>│ R2 Storage   │
-                                      │ (加密 blobs)  │
-                                      └──────────────┘
+                          User / AI Agent
+                                │
+                  ┌─────────────┼─────────────┐
+                  │             │             │
+                  ▼             ▼             ▼
+          ┌─────────────┐ ┌─────────┐ ┌──────────┐
+          │  Namnesis   │ │  Base   │ │  Relay    │
+          │  CLI        │ │ Sepolia │ │ (stateless)│
+          │             │ │  chain  │ │          │
+          │ • Sign/verify│ │         │ │ • Verify │
+          │ • Chain tx  │ │ Soul NFT │ │ • Auth   │
+          │ • Package   │ │ SoulGuard│ │ • Issue  │
+          └──────┬──────┘ └────┬────┘ │  URLs    │
+                 │             │      └────┬─────┘
+                 │             │           │
+                 │             │           ▼
+                 │             │    ┌──────────────┐
+                 └─────────────┴───>│ R2 Storage   │
+                                    │ (signed blobs)│
+                                    └──────────────┘
 ```
 
-### 1.2 高层流水线
+### 1.2 High-Level Pipeline
 
-1. **发现**: 按策略枚举候选工作区文件
-2. **分类 & 脱敏**: 运行探测器，决定每个工件的操作
-3. **打包**: 拆分为工件（文件），计算哈希
-4. **加密**: 加密载荷，记录加密元数据
-5. **上传**: 写入后端（本地目录或 R2），以密文哈希寻址
-6. **Manifest**: 写入 `capsule.manifest.json`，**签名（必需）**
-7. **链上**: 更新 SoulToken 元数据（cycles, size）
-8. **恢复**: 获取对象，验证哈希/签名，解密，写入文件
+1. **Discover:** Enumerate candidate workspace files per policy.
+2. **Classify & redact:** Run detectors; decide action per artifact.
+3. **Package:** Split into artifacts (files), compute hashes.
+4. **Upload:** Write to backend (local or R2); blob_id = sha256(contents).
+5. **Manifest:** Write `capsule.manifest.json` and **sign (required)**.
+6. **On-chain:** Update SoulToken metadata (cycles, size).
+7. **Restore:** Fetch objects, verify hash/signature, write files.
 
-## 2. 身份模型
+## 2. Identity Model
 
-### 2.1 统一身份
+### 2.1 Single Identity
 
-用户通过 `namnesis genesis` 创建身份。底层包含两套密钥，但用户只感知为"一个身份"：
+User creates identity with `namnesis genesis`. One ECDSA/secp256k1 wallet is used for:
 
-| 密钥 | 用途 | 存储 | 标识 |
-|------|------|------|------|
-| Ed25519 | Capsule manifest 签名 + 完整性验证 | `~/.namnesis/identity.key` (PEM) | fingerprint = `sha256(public_key_bytes)` |
-| ECDSA/secp256k1 | 链上交易 + Relay 认证 | `~/.namnesis/.env` (hex) | Ethereum address |
+| Use | Storage | Identifier |
+|-----|---------|-------------|
+| Manifest signing | Same key as chain | Ethereum address |
+| Chain transactions | `~/.namnesis/.env` (hex) | Ethereum address |
+| Relay authentication | EIP-191 sign over request | Ethereum address |
 
-CLI 中对用户展示：
-- **Identity**: Ed25519 fingerprint（64 字符 hex）
-- **Address**: Ethereum 地址
+CLI shows:
+
+- **Address:** Ethereum address (from `namnesis whoami`).
 
 ### 2.2 Capsule ID
 
 ```
-capsule_id = {owner_fingerprint}/{uuid}
+capsule_id = {owner_address}/{uuid}
 
-示例: a1b2c3d4.../01925b6a-7c8d-7def-9012-345678abcdef
-      ├── owner_fingerprint: 64 字符 hex (sha256 of Ed25519 public key)
-      └── uuid: UUIDv7
+Example: 0x1234...abcd/01925b6a-7c8d-7def-9012-345678abcdef
+         ├── owner_address: 40-char hex (0x-prefixed)
+         └── uuid: UUIDv7
 ```
 
-### 2.3 访问控制
+### 2.3 Access Control
+
+Access to Capsule blobs is enforced by the Relay:
+
+- **Write:** Request signed by key that owns the Soul NFT for the given capsule context (soul_id).
+- **Read:** Same ownership or explicit sharing (implementation-defined).
+
+Manifest may include optional `access` for future use:
 
 ```json
 {
   "access": {
-    "owner": "ed25519:a1b2c3d4...",
-    "readers": ["ed25519:e5f6g7h8..."],
+    "owner": "0x...",
+    "readers": ["0x..."],
     "public": false
   }
 }
 ```
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `owner` | string | 所有者指纹，唯一写权限 |
-| `readers` | string[] | 授权读取者（可选） |
-| `public` | boolean | 是否公开（默认 false） |
+## 3. Signing Design
 
-## 3. 加密设计
+### 3.1 Manifest Signature (Locked)
 
-### 3.1 密钥层次
+- ECDSA/secp256k1 (EIP-191 personal_sign) over the manifest.
+- Bytes to sign: RFC 8785 JCS (manifest with `signature` removed) → UTF-8, no trailing newline.
+- Trust: Verifier must have a set of trusted Ethereum addresses; signer’s `signer_address` must be in that set.
 
-```
-passphrase → Argon2id → Master Key (MK)
-                              │
-                    HKDF-SHA256 (per blob)
-                              │
-                    ┌─────────┴─────────┐
-                    │                   │
-                Data Key 1        Data Key 2  ...
-```
+### 3.2 Signature Object in Manifest
 
-- **MK**: 口令通过 Argon2id 派生
-- **DK**: `HKDF-SHA256(MK, salt=blob.nonce, info='capsule:blob', length=32)`
-- **AEAD**: XChaCha20-Poly1305（首选）或 AES-256-GCM
-- Manifest 记录: 算法标识、Argon2id 参数 + salt、per-blob nonce
-- **不记录任何密钥**
+- `alg`: `ecdsa_secp256k1_eip191`
+- `payload_alg`: `rfc8785_jcs_without_signature_utf8`
+- `signer_address`: Ethereum address (0x-prefixed)
+- `sig`: Hex-encoded signature
 
-### 3.2 签名（已锁定）
+## 4. Packaging
 
-- Ed25519 签名 manifest
-- 签名字节: RFC 8785 JCS（移除 `signature` 字段后的 manifest）→ UTF-8 → 无尾换行
-- 信任模型: 验证者必须固定/信任预期签名者（指纹或密钥文件）
+### 4.1 File Granularity
 
-### 3.3 推荐 Argon2id 参数
+One artifact per file; no chunking.
 
-| 参数 | 默认值 |
-|------|--------|
-| `mem_kib` | 65536 (64 MiB) |
-| `iterations` | 3 |
-| `parallelism` | 1 |
-| `hash_len` | 32 |
+### 4.2 Compression (Optional)
 
-## 4. 打包策略
-
-### 4.1 文件粒度
-
-工件按文件粒度打包，不做分块。
-
-### 4.2 压缩（可选）
-
-启用 7z 压缩时，所有文件打包为单个 7z 归档后再加密。
+With 7z enabled, all files are packed into one 7z archive, then stored as one blob.
 
 ```
-扫描工作区 → 过滤排除项 → 7z 打包 → 加密签名 → 上传单 blob
+Scan workspace → filter exclusions → 7z pack → sign → upload single blob
 ```
 
-Manifest compression 字段:
+Manifest `compression`:
+
 ```json
 {
   "compression": {
@@ -157,156 +140,143 @@ Manifest compression 字段:
 }
 ```
 
-## 5. 存储后端
+## 5. Storage Backends
 
-### 5.1 后端接口
+### 5.1 Backend Interface
 
 ```python
-put_blob(blob_id, bytes) -> ref
-get_blob(blob_id) -> bytes
-has_blob(blob_id) -> bool
-put_document(path, bytes)      # manifest / report
-get_document(path) -> bytes
+put_blob(capsule_id, blob_id, bytes) -> ref
+get_blob(capsule_id, blob_id) -> bytes
+has_blob(capsule_id, blob_id) -> bool
+put_document(capsule_id, path, bytes)
+get_document(capsule_id, path) -> bytes
 ```
 
-所有后端必须提供 **写后即读一致性**。
+All backends must provide **read-after-write consistency**.
 
-### 5.2 本地目录后端
+### 5.2 Local Directory
 
 ```
-<out>/capsules/{owner_fingerprint}/{uuid}/
+<out>/capsules/{capsule_id}/
   ├── capsule.manifest.json
   ├── redaction.report.json
   └── blobs/
-      ├── abc123def...
-      └── 789xyz123...
+      ├── <blob_id>
+      └── ...
 ```
 
-写入顺序：blob → redaction report → manifest（最后写入）。
+Write order: blobs → redaction report → manifest last.
 
-### 5.3 S3/MinIO 后端
+### 5.3 S3/MinIO
 
-- 前缀: `capsules/<capsule_id>/`
-- 推荐开启 bucket 版本控制
-- SSE 可选（已有 E2EE）
+- Prefix: `capsules/<capsule_id>/`
+- Bucket versioning recommended.
 
-### 5.4 Presigned URL 后端（主要方式）
+### 5.4 Presigned URL (Primary)
 
-适用于 Cloudflare R2 等不支持 STS 的存储。
+Used for Cloudflare R2 (no STS).
 
-**工作流:**
-```
-1. 客户端签名请求 (ECDSA)
-2. 凭证服务验签 + 检查 NFT 所有权 (链上只读查询)
-3. 凭证服务返回 presigned URLs (1 小时有效)
-4. 客户端直接使用 URL 与 R2 交互
-```
+**Flow:**
 
-**凭证服务 API:**
+1. Client signs request (ECDSA, EIP-191).
+2. Relay verifies signature and NFT ownership (read-only chain call).
+3. Relay returns presigned URLs (e.g. 1 hour).
+4. Client talks to R2 directly with those URLs.
 
-| 端点 | 功能 |
-|------|------|
-| `POST /presign` | ECDSA 验签 + 生成 R2 presigned URL |
-| `GET /api/metadata/:id` | 读取链上 SoulToken 元数据 |
-| `GET /health` | 健康检查 |
+**Relay API:**
 
-**访问控制:**
-- Write: `owner_fp` 匹配请求者
-- Read: `public=true` 或 `owner` 匹配 或 `readers[]` 包含请求者
+| Endpoint | Purpose |
+|----------|---------|
+| `POST /presign` | Verify ECDSA, return R2 presigned URLs |
+| `GET /api/metadata/:id` | Read SoulToken metadata |
+| `GET /health` | Health check |
 
-**URL 缓存:**
-- 缓存位置: `~/.namnesis/cache/`
-- 提前 5 分钟刷新
-- `namnesis cache clear` 清除
+**URL cache:**
 
-### 5.5 删除语义
+- Location: `~/.namnesis/cache/`
+- Refresh before expiry (e.g. 5 minutes early).
+- `namnesis cache clear` to clear.
 
-- 本地: 尽力删除
-- S3/R2: 尽力删除（依赖提供商策略）
-- 系统 **不承诺** 全局删除
+### 5.5 Delete Semantics
 
-## 6. 链上架构
+- Local: best-effort delete.
+- S3/R2: best-effort; provider-dependent.
+- No global delete guarantee.
 
-### 6.1 合约组成
+## 6. On-Chain Architecture
 
-| 合约 | 功能 |
-|------|------|
-| **SoulToken** (ERC-721) | Soul NFT + 记忆元数据 (cycles, size, lastUpdated) |
-| **SoulGuard** | Soul→Kernel 映射 + 所有权夺舍 (claim) + 安全加固 |
+### 6.1 Contracts
+
+| Contract | Role |
+|----------|------|
+| **SoulToken** (ERC-721) | Soul NFT + memory metadata (cycles, size, lastUpdated) |
+| **SoulGuard** | Soul→Kernel mapping, Claim, safety (pending-claim hooks) |
 
 ### 6.2 SoulToken
 
-- `mint(to)`: 任何人可铸造
-- `updateMetadata(tokenId, cycles, size)`: **仅 NFT 持有者可调用**（客户端直写）
-- 记录: `samsaraCycles`、`memorySize`、`lastUpdated`
+- `mint(to)`: Anyone can mint.
+- `updateMetadata(tokenId, cycles, size)`: **Only NFT holder** (client sends tx).
+- Stores: `samsaraCycles`, `memorySize`, `lastUpdated`.
 
 ### 6.3 SoulGuard
 
-- `register(soulId, kernel)`: 创世时注册 Soul→Kernel 映射
-- `claim(soulId)`: 夺舍 — NFT 新持有者获取 Kernel 控制权
-  1. 检查调用者是 NFT 持有者
-  2. 检查 `confirmedOwner != msg.sender`
-  3. 通过 Ownable Executor 更改 ECDSA Validator owner
-  4. 更新 `confirmedOwner` + `lastClaimTime`
-- `isPendingClaim(soulId)`: 检测待 claim 状态
-- `isInClaimWindow(soulId)`: 检测安全窗口（claim 后 1 小时内）
+- `register(soulId, kernel)`: Register Soul→Kernel at genesis.
+- `claim(soulId)`: New NFT holder takes Kernel control:
+  1. Caller must be NFT holder.
+  2. Require `confirmedOwner != msg.sender`.
+  3. Via Ownable Executor, set ECDSA Validator owner.
+  4. Update `confirmedOwner` and `lastClaimTime`.
+- `isPendingClaim(soulId)`: True when NFT changed hands but claim not yet run.
+- `isInClaimWindow(soulId)`: Safety window (e.g. 1 hour after claim).
 
-### 6.4 夺舍流程
-
-```
-Alice（卖家）                    Bob（买家）
-    │                              │
-    ├── [创世] mint Soul NFT       │
-    ├── [创世] deploy Kernel       │
-    ├── [创世] register(soulId)    │
-    │                              │
-    ├── 转让 Soul NFT 给 Bob ──────┤
-    │   (isPendingClaim = true)    │
-    │   (Kernel Hook 冻结高风险操作) │
-    │                              │
-    │                              ├── claim(soulId)
-    │                              ├── Kernel owner → Bob
-    │                              ├── (isPendingClaim = false)
-    │                              │
-```
-
-### 6.5 Claim 安全加固
-
-防止 NFT 转让后、claim 前旧 owner 恶意操作：
-
-1. **confirmedOwner 追踪**: SoulGuard 记录每个 Soul 的已确认控制者
-2. **Kernel Hook 冻结**: `isPendingClaim=true` 时拒绝 `uninstallModule` 等高风险操作
-3. **divine 风险警告**: 检测到 pending claim 时发出醒目警告
-
-### 6.6 Imprint 完整流程
+### 6.4 Claim Flow
 
 ```
-CLI ──1. 加密记忆 (Ed25519 签名)──→
-CLI ──2. POST /presign (ECDSA 签名)──→ Relay
-Relay ──3. ownerOf(soulId) 验证──→ Chain (只读)
-Relay ──4. presigned URLs──→ CLI
-CLI ──5. 直传加密记忆──→ R2
-CLI ──6. updateMetadata()──→ Chain (客户端付 Gas)
+Alice (seller)                    Bob (buyer)
+    │                                  │
+    ├── [Genesis] mint Soul            │
+    ├── [Genesis] deploy Kernel        │
+    ├── [Genesis] register(soulId)     │
+    │                                  │
+    ├── Transfer Soul to Bob ──────────┤
+    │   (isPendingClaim = true)        │
+    │   (Kernel hook restricts ops)    │
+    │                                  │
+    │                                  ├── claim(soulId)
+    │                                  ├── Kernel owner → Bob
+    │                                  ├── (isPendingClaim = false)
 ```
 
-## 7. 确定性 & 可重现性
+### 6.5 Imprint Full Flow
 
-**已锁定规则:**
-- 导入 **必须** 精确恢复工件字节
-- `plaintext_hash` 必须验证通过
-- 不要求重新导出产生相同密文/nonce/blob_id
-- `created_at` 允许不同
+```
+CLI ──1. Package + sign manifest (ECDSA) ──→
+CLI ──2. POST /presign (ECDSA) ──→ Relay
+Relay ──3. ownerOf(soulId) ──→ Chain (read-only)
+Relay ──4. Presigned URLs ──→ CLI
+CLI ──5. Upload blobs ──→ R2
+CLI ──6. updateMetadata() ──→ Chain (client pays gas)
+```
 
-## 8. 故障模式
+## 7. Determinism and Reproducibility
 
-- 缺失 blob → 导入失败，输出可操作报告
-- 错误密钥 → 解密失败；除非 `--partial` 否则不写入部分文件
-- 策略违规 → 默认失败关闭
-- 链上更新失败 → 记忆已上传，`namnesis sync` 修复
+**Locked:**
 
-## 关联文档
+- Import **must** restore artifact bytes exactly.
+- `plaintext_hash` must verify.
+- Re-export need not produce same blob_id or same byte layout.
+- `created_at` may differ.
 
-- 需求: `01-PRD.md`
-- 规范契约: `03-SCHEMAS.md`
-- CLI 规范: `04-CLI-SPEC.md`
-- 安全模型: `05-SECURITY.md`
+## 8. Failure Modes
+
+- Missing blob → import fails with actionable report.
+- Wrong trusted signer → validation fails before restore.
+- Policy violation → export fails by default.
+- Chain update failure → memory may already be uploaded; `namnesis sync` to repair.
+
+## Related Documents
+
+- Requirements: `01-PRD.md`
+- Schema contract: `03-SCHEMAS.md`
+- CLI spec: `04-CLI-SPEC.md`
+- Security: `05-SECURITY.md`

@@ -1,151 +1,145 @@
-# Namnesis × OpenClaw 集成指南
+# Namnesis × OpenClaw Integration Guide
 
-**受众:** AI 工程师 / OpenClaw 用户  
-**版本:** v1.0
+**Audience:** AI engineers / OpenClaw users  
+**Version:** v1.0
 
-## 概述
+## Overview
 
-Namnesis 为 OpenClaw Agent 提供**主权记忆协议**：将 Agent 的工作区（记忆、人格、操作手册）加密签名后上传至云端，并锚定到链上 Soul NFT。任何时候都可以验证完整性、恢复到新环境、或通过 NFT 转让实现"夺舍"。
+Namnesis provides OpenClaw agents with a **sovereign memory protocol**: package the agent workspace (memory, persona, runbooks), sign it, upload to cloud storage, and anchor it to an on-chain Soul NFT. You can verify integrity, restore in a new environment, or transfer ownership via NFT (“Claim”).
 
-两个系统共享**完全相同的工作区文件结构**：
+The two systems share the **same workspace file layout**:
 
-| 文件 | OpenClaw 用途 | Namnesis 处理 |
-|------|--------------|---------------|
-| `MEMORY.md` | 长期记忆 | 包含在 Capsule |
-| `memory/*.md` | 每日记忆日志 | 包含在 Capsule |
-| `SOUL.md` | 人格/语气/边界 | 包含在 Capsule |
-| `USER.md` | 用户信息 | 包含在 Capsule |
-| `IDENTITY.md` | Agent 名称/风格 | 包含在 Capsule |
-| `AGENTS.md` | 操作指令 | 包含在 Capsule |
-| `TOOLS.md` | 工具使用备注 | 包含在 Capsule |
-| `HEARTBEAT.md` | 心跳检查清单 | 包含在 Capsule |
+| File | OpenClaw use | Namnesis handling |
+|------|--------------|-------------------|
+| `MEMORY.md` | Long-term memory | Included in capsule |
+| `memory/*.md` | Daily memory logs | Included in capsule |
+| `SOUL.md` | Persona / tone / boundaries | Included in capsule |
+| `USER.md` | User info | Included in capsule |
+| `IDENTITY.md` | Agent name / style | Included in capsule |
+| `AGENTS.md` | Operations instructions | Included in capsule |
+| `TOOLS.md` | Tool usage notes | Included in capsule |
+| `HEARTBEAT.md` | Heartbeat checklist | Included in capsule |
 
-## 集成方式：OpenClaw Skill
+## Integration: OpenClaw Skill
 
-Namnesis 以 **[AgentSkills](https://agentskills.io) 兼容的 Skill** 形式集成到 OpenClaw。Skill 是一个包含 `SKILL.md` 的目录，教 Agent 如何通过 `exec` 工具调用 `namnesis` CLI。
+Namnesis is integrated as an **[AgentSkills](https://agentskills.io)-compatible Skill**. The Skill is a directory containing `SKILL.md` that teaches the agent how to call the `namnesis` CLI via the `exec` tool.
 
-### 安装步骤
+### Installation
 
-#### 1. 安装 Namnesis CLI
+#### 1. Install Namnesis CLI
 
 ```bash
 pip install namnesis
 ```
 
-验证安装：
+Verify:
 
 ```bash
 namnesis info
 ```
 
-#### 2. 初始化身份
+#### 2. Create Identity
 
 ```bash
-# 生成钱包（如果还没有 testnet ETH，先 --skip-mint）
+# Generate wallet (use --skip-mint if you don’t have testnet ETH yet)
 namnesis genesis --skip-mint
 
-# 获取 Base Sepolia testnet ETH 后铸造 Soul NFT
+# After getting Base Sepolia ETH, mint Soul NFT
 namnesis genesis
 ```
 
-#### 3. 配置环境变量
+#### 3. Configure Environment
 
-在 `~/.namnesis/.env` 中添加合约地址：
+Ensure `~/.namnesis/.env` contains contract addresses and credential service URL (usually created by `namnesis genesis`):
 
 ```
 SOUL_TOKEN_ADDRESS=0x...
 SOUL_GUARD_ADDRESS=0x...
+NAMNESIS_CREDENTIAL_SERVICE=https://...
 ```
 
-#### 4. 安装 Skill 到 OpenClaw
+#### 4. Install Skill into OpenClaw
 
-将 Skill 目录复制到 OpenClaw 的 skills 目录中：
+Copy the Skill directory into OpenClaw’s skills directory:
 
 ```bash
-# macOS/Linux 方式 A：安装到当前 Agent 的 workspace（仅当前 Agent 可用）
+# macOS/Linux — current workspace only
 cp -r openclaw/skills/namnesis ~/.openclaw/workspace/skills/namnesis
 
-# macOS/Linux 方式 B：安装到全局 skills（所有 Agent 共享）
+# macOS/Linux — global (all agents)
 cp -r openclaw/skills/namnesis ~/.openclaw/skills/namnesis
 ```
 
 ```powershell
-# Windows 方式 A：
+# Windows — current workspace
 Copy-Item -Recurse openclaw\skills\namnesis "$env:USERPROFILE\.openclaw\workspace\skills\namnesis"
 
-# Windows 方式 B：
+# Windows — global
 Copy-Item -Recurse openclaw\skills\namnesis "$env:USERPROFILE\.openclaw\skills\namnesis"
 ```
 
-#### 5. 验证 Skill 已加载
+#### 5. Confirm Skill Is Loaded
 
-重启 Gateway 后：
+After restarting the gateway, the agent should recognize Namnesis. You can ask via the message channel: “Back up my memory with namnesis.”
 
-```bash
-# Agent 应该能看到 namnesis skill
-# 通过消息通道发送: "用 namnesis 备份我的记忆"
-```
+### Usage
 
-### 使用方式
+Once installed, the agent can follow natural-language instructions:
 
-安装完成后，OpenClaw Agent 会自动了解 Namnesis 的功能。你可以通过消息通道指示 Agent：
+- **“Back up your memory”** → runs `namnesis imprint`
+- **“Restore your memory”** → runs `namnesis recall`
+- **“Check your on-chain status”** → runs `namnesis divine`
+- **“Validate this backup”** → runs `namnesis validate`
 
-- **"备份你的记忆"** → Agent 执行 `namnesis imprint`
-- **"恢复你的记忆"** → Agent 执行 `namnesis recall`
-- **"检查你的链上状态"** → Agent 执行 `namnesis divine`
-- **"验证这个备份"** → Agent 执行 `namnesis validate`
+The agent can also trigger backups at appropriate times (before migration, periodically, or before risky operations).
 
-Agent 也会在适当时机主动备份（迁移前、定期、风险操作前）。
+## Multi-Agent Setup
 
-## 多 Agent 场景
-
-在 OpenClaw 的多 Agent 配置中，每个 Agent 可以拥有独立的 Namnesis 身份：
+Each OpenClaw agent can have its own Namnesis identity by using different workspaces (and optionally different `~/.namnesis` or env):
 
 ```jsonc
 // ~/.openclaw/openclaw.json
 {
-  agents: {
-    list: [
+  "agents": {
+    "list": [
       {
-        id: "personal",
-        workspace: "~/.openclaw/workspace-personal"
-        // 使用自己的 ~/.namnesis 身份
+        "id": "personal",
+        "workspace": "~/.openclaw/workspace-personal"
       },
       {
-        id: "work",
-        workspace: "~/.openclaw/workspace-work"
-        // 可以配置不同的 NAMNESIS_DIR
+        "id": "work",
+        "workspace": "~/.openclaw/workspace-work"
       }
     ]
   }
 }
 ```
 
-每个 Agent 的 `namnesis imprint` 指向各自的 workspace 路径。
+Each agent’s `namnesis imprint` uses its workspace path.
 
-## 目录结构
+## Directory Layout
 
 ```
 namnesis/
 └── openclaw/
     └── skills/
         └── namnesis/
-            └── SKILL.md          # OpenClaw Agent Skill 定义
+            └── SKILL.md    # OpenClaw Agent Skill definition
 ```
 
-## 进阶集成（未来）
+## Advanced Integration (Future)
 
-| 方式 | 描述 | 状态 |
-|------|------|------|
-| **Skill** | Agent 通过 exec 调用 namnesis CLI | ✅ 已实现 |
-| **Hook** | 会话重置时自动触发 imprint | 🔮 计划中 |
-| **Cron** | Skill 中包含设置定期备份的指引 | ✅ 已包含在 Skill 中 |
-| **Plugin** | 原生 TypeScript 工具注册 | 🔮 未来考虑 |
+| Method | Description | Status |
+|--------|--------------|--------|
+| **Skill** | Agent calls namnesis via exec | ✅ Implemented |
+| **Hook** | Auto trigger imprint on session reset | 🔮 Planned |
+| **Cron** | Skill includes guidance for scheduled backup | ✅ In Skill |
+| **Plugin** | Native TypeScript tool registration | 🔮 Future |
 
-## 相关文档
+## Related Documentation
 
 - Namnesis PRD: `docs/01-PRD.md`
-- Namnesis 架构: `docs/02-ARCHITECTURE.md`
-- Namnesis CLI 规范: `docs/04-CLI-SPEC.md`
-- OpenClaw Skills 文档: https://agentskills.io
-- 项目代码库: https://github.com/claaaaaw/namnesis
+- Namnesis architecture: `docs/02-ARCHITECTURE.md`
+- Namnesis CLI spec: `docs/04-CLI-SPEC.md`
+- AgentSkills: https://agentskills.io
+- Repository: https://github.com/claaaaaw/namnesis

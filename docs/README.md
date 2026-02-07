@@ -1,83 +1,87 @@
-# Namnesis — 主权智能体协议
+# Namnesis — Sovereign Agent Protocol
 
-Namnesis: 链上主权 AI Agent 身份与记忆协议 — 加密、签名、上链、复生。
+Namnesis: on-chain sovereign AI agent identity and memory protocol — sign, upload, restore, and transfer ownership.
 
-## 项目概述
+## Overview
 
-Namnesis 是一个 **AI-first** 的链上主权智能体协议，将 AI Agent 的身份与记忆绑定为链上 NFT (Soul)，提供加密存储、签名验证和所有权转移（夺舍/Resurrection）能力。
+Namnesis is an **AI-first** on-chain sovereign agent protocol. It binds an agent’s identity and memory to an on-chain NFT (The Soul), with signed storage, integrity verification, and ownership transfer (Claim / Resurrection).
 
-核心能力：
-- **身份创建** (`genesis`): 生成统一身份 + 铸造 Soul NFT
-- **记忆铭刻** (`imprint`): 加密 + 上传记忆到 R2 + 链上元数据更新
-- **记忆回溯** (`recall`): 下载 + 验签 + 解密恢复
-- **夺舍转移** (`claim`): NFT 转让后接管 Kernel 控制权
-- **链上占卜** (`divine`): 查询链上状态 + 风险检测
-- **状态同步** (`sync`): 修复身份/链上不一致状态
+Core capabilities:
 
-## 技术栈
+- **Identity creation** (`genesis`): Create identity and mint Soul NFT
+- **Memory imprint** (`imprint`): Package workspace, upload to R2, update on-chain metadata
+- **Memory recall** (`recall`): Download, verify signature, restore workspace
+- **Ownership transfer** (`claim`): Take over Kernel after NFT transfer
+- **On-chain query** (`divine`): Query chain state and risk (e.g. pending Claim)
+- **State sync** (`sync`): Repair identity/chain inconsistencies
+- **Token** (`token`): ERC-20 balance and transfer via Kernel
 
-| 层 | 技术 |
-|----|------|
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
 | CLI | Python 3.11+ / Click |
-| 加密 | Argon2id + XChaCha20-Poly1305 / AES-256-GCM |
-| 签名 | Ed25519 (capsule) + ECDSA/secp256k1 (链上) |
-| 链上 | Base Sepolia / ERC-721 / ERC-4337 |
-| 存储 | Cloudflare R2 (presigned URL) |
-| 凭证 | Cloudflare Workers (无状态) |
-| 合约 | Foundry / Solidity 0.8.20 |
+| Signing | ECDSA/secp256k1 (EIP-191) for manifest and Relay auth |
+| On-chain | Base Sepolia / ERC-721 / ERC-4337 |
+| Storage | Cloudflare R2 (presigned URLs) |
+| Credential service | Cloudflare Workers (stateless) |
+| Contracts | Foundry / Solidity 0.8.24 |
 
-## 文档阅读顺序
+Data confidentiality is enforced by the Relay (NFT ownership gate + presigned URLs); the current implementation does not use client-side encryption.
 
-| # | 文档 | 内容 |
-|---|------|------|
-| 1 | **01-PRD.md** | 产品概述、需求、用户故事 |
-| 2 | **02-ARCHITECTURE.md** | 系统架构、双密钥身份、存储后端、链上设计 |
-| 3 | **03-SCHEMAS.md** | Machine Layer 规范契约（JSON Schema） |
-| 4 | **04-CLI-SPEC.md** | CLI 命令规范、选项、退出码 |
-| 5 | **05-SECURITY.md** | 安全模型、威胁分析、脱敏策略 |
-| 6 | **06-CONFORMANCE.md** | 一致性测试要求 |
-| 7 | **07-ROADMAP.md** | 路线图、开放问题 |
+## Document Order
 
-## 规范资源
+| # | Document | Content |
+|---|----------|---------|
+| 1 | **01-PRD.md** | Product overview, requirements, user stories |
+| 2 | **02-ARCHITECTURE.md** | System architecture, identity, storage, chain design |
+| 3 | **03-SCHEMAS.md** | Machine-layer contract (JSON Schema) |
+| 4 | **04-CLI-SPEC.md** | CLI commands, options, exit codes |
+| 5 | **05-SECURITY.md** | Security model, threats, redaction policy |
+| 6 | **06-CONFORMANCE.md** | Conformance test requirements |
+| 7 | **07-ROADMAP.md** | Roadmap and open issues |
+| — | **AI-INTEGRATION.md** | OpenClaw Skill integration |
+
+## Spec Resources
 
 - JSON Schemas: `docs/schemas/v1/`
-- 示例 Capsule: `docs/examples/`
-- 一致性测试: `conformance/`
+- Example capsules: `docs/examples/`
+- Conformance fixtures: `conformance/`
 
-## 快速开始
+## Quick Start
 
 ```bash
-# 安装
-pip install -e .
+# Install
+pip install -e ".[all]"
 
-# 创建身份 + 铸造 Soul NFT
+# Create identity and mint Soul NFT
 namnesis genesis
 
-# 仅创建身份（离线测试）
+# Identity only (offline testing)
 namnesis genesis --skip-mint
 
-# 查看身份
+# Show identity
 namnesis whoami
 
-# 加密并上传记忆
+# Package and upload memory
 namnesis imprint --workspace ./my-agent --soul-id 0
 
-# 下载并解密记忆
-namnesis recall --capsule-id <ID> --to ./restored --trusted-signer <FINGERPRINT>
+# Download and restore memory
+namnesis recall --capsule-id <ID> --to ./restored --trusted-signer self
 
-# 查看链上状态
+# Query on-chain status
 namnesis divine --soul-id 0
 
-# 修复不一致状态
+# Repair inconsistent state
 namnesis sync --soul-id 0
 ```
 
-## 核心设计决策（已锁定）
+## Locked Design Decisions
 
-1. **密文寻址 blob**: `blob_id = sha256(ciphertext_bytes)`
-2. **Manifest 签名必需**: Ed25519 + RFC 8785 JCS 规范化
-3. **口令派生密钥**: passphrase → Argon2id → Master Key
-4. **严格脱敏策略**: 白名单制，默认拒绝
-5. **字节级恢复**: 导入必须精确恢复文件内容
-6. **客户端支付 Gas**: 所有链上交易由客户端直接发送
-7. **统一身份**: 用户感知一个身份，底层自动管理双密钥
+1. **Blob addressing:** `blob_id = sha256(blob_bytes)` (current: plaintext blobs).
+2. **Manifest signature required:** ECDSA (EIP-191) + RFC 8785 JCS canonicalization.
+3. **Single identity:** One ECDSA/secp256k1 wallet; user sees one “identity”.
+4. **Strict redaction:** Whitelist by default; forbidden paths block export unless overridden.
+5. **Byte-accurate restore:** Import must restore file contents exactly.
+6. **Client pays gas:** All on-chain transactions sent by the client.
+7. **Capsule ID:** `{owner_ethereum_address}/{uuid}` (e.g. `0x.../01925b6a-7c8d-7def-9012-345678abcdef`).

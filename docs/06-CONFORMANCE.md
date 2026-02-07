@@ -1,116 +1,119 @@
-# Namnesis — 一致性测试
+# Namnesis — Conformance Testing
 
-**受众:** AI 工程师  
-**版本:** v2.0（规范性文档）
+**Audience:** AI engineers  
+**Version:** v2.0 (normative)
 
-## 0. 目标
+## 0. Purpose
 
-定义兼容性标准，使任何实现都可通过验证确认为: 安全默认、Machine Layer 契约正确。
+Define compatibility criteria so any implementation can be verified as: safe defaults, correct Machine Layer contract.
 
-## 1. 测试 Fixture 约定
+## 1. Test Fixture Convention
 
-Fixtures 位于 `conformance/fixtures/`:
-- `workspace_minimal/` — 最小工作区样本
-- `workspace_with_secrets/` — 含 Forbidden 文件 + 秘密字符串
-- `expected_capsule_minimal/` — 黄金标准 manifest/report
+Fixtures under `conformance/fixtures/`:
 
-## 2. 必测项
+- `workspace_minimal/` — Minimal workspace sample
+- `workspace_with_secrets/` — Contains Forbidden files and secret strings
+- `expected_capsule_minimal/` — Golden manifest/report reference
 
-### 2.1 往返测试（字节相同）
+## 2. Required Tests
 
-**给定** fixture 工作区
-- 运行 `imprint`（或 export 流程）生成 Capsule
-- 删除工作区
-- 运行 `recall`（或 import 流程）恢复到空目录
+### 2.1 Round-Trip (Byte-Identical)
 
-**断言:**
-- 恢复文件与原始文件字节相同（白名单工件）
-- `capsule.manifest.json` 有效
-- `redaction.report.json` 存在且有效
-- manifest 包含 `schema_version`、`crypto.kdf_params`、`crypto.hkdf_info`
+**Given** fixture workspace:
 
-### 2.2 策略严格模式（失败关闭）
+- Run `imprint` (or export) to produce a capsule.
+- Remove workspace.
+- Run `recall` (or import) into an empty directory.
 
-Fixture 包含:
+**Assert:**
+
+- Restored files match original bytes (for whitelisted artifacts).
+- `capsule.manifest.json` is valid.
+- `redaction.report.json` exists and is valid.
+- Manifest has `schema_version`, `signature` (ECDSA), and artifact/blob consistency.
+
+### 2.2 Strict Policy (Fail Closed)
+
+Fixture includes:
+
 - `.env`
 - `memory/moltbook.json`
 - `*_cookies.json`
 
-**断言:**
-- 导出（strict 模式）退出码 `2`
-- 脱敏报告中 Forbidden 项的决策为 `exclude`
-- 报告 findings 仅含类型/规则ID（无秘密子串）
+**Assert:**
+
+- Export in strict mode exits with code `2`.
+- Redaction report marks Forbidden items as `exclude`.
+- Report findings contain only type/rule ID (no secret substrings).
 
 ### 2.3 Dry Run
 
-**断言:**
-- `--dry-run` 仅产生 `redaction.report.json`
-- 不写入 blob
-- 不写入 manifest
-- report 包含 `capsule_id`
+**Assert:**
 
-### 2.4 篡改检测
+- `--dry-run` produces only `redaction.report.json`.
+- No blobs or manifest written.
+- Report includes `capsule_id`.
 
-导出后修改一个 blob。
+### 2.4 Tamper Detection
 
-**断言:**
-- `validate` 退出码 `5`
+After export, modify one blob.
 
-### 2.5 签名 + 规范化
+**Assert:**
 
-导出后移除 `signature` 字段或修改任何签名字段。
+- `validate` exits with code `5`.
 
-**断言:**
-- `validate` 退出码 `4`
+### 2.5 Signature and Canonicalization
 
-额外验证:
-- 验证器使用 **RFC 8785 JCS**（无 `signature` 字段）+ UTF-8 + 无尾换行重新计算签名字节
-- 签名 **必须** 仅对这些字节验证
+After export, remove `signature` or change any signature field.
 
-### 2.6 错误口令
+**Assert:**
 
-**断言:**
-- `recall` 退出码 `6`
-- 除非 `--partial`，否则不写入任何文件
+- `validate` exits with code `4`.
 
-### 2.7 受信签名者固定
+Additional: Verifier must recompute bytes with **RFC 8785 JCS** (no `signature` field) + UTF-8, no trailing newline, and verify ECDSA only over those bytes.
 
-使用不受信的签名者进行 validate/recall。
+### 2.6 Trusted Signer
 
-**断言:**
-- `validate` 退出码 `4`
-- `recall` 在解密/恢复前失败
+Run validate/recall with an untrusted signer (address not matching manifest `signer_address`).
 
-### 2.8 Manifest 一致性
+**Assert:**
 
-**断言:**
-- `artifacts[].path` 值唯一
-- `blobs[].blob_id` 值唯一
-- 每个 `artifacts[].blob_id` 在 `blobs[]` 中存在
-- `signature.signer_fingerprint` 匹配 `sha256(public_key_bytes)`
+- `validate` exits with code `4`.
+- `recall` fails before writing files (verification before restore).
 
-### 2.9 脱敏报告覆盖 & 摘要一致性
+### 2.7 Manifest Consistency
 
-**断言:**
-- `decisions` 包含所有候选文件（包括排除的）
-- `findings_summary` 总计匹配实际 findings 和 decisions
+**Assert:**
 
-## 3. 兼容性定义
+- `artifacts[].path` unique.
+- `blobs[].blob_id` unique.
+- Every `artifacts[].blob_id` present in `blobs[]`.
+- `signature.signer_address` is a valid Ethereum address; signature verifies for that address.
 
-实现兼容条件:
-- 可导出/导入工作区文件且不改变其格式
-- `memory/` 作为可扩展命名空间，不硬编码文件名
-- 应用严格脱敏默认，永不以明文导出秘密
+### 2.8 Redaction Report Coverage and Summary
 
-## 4. 测试资源
+**Assert:**
 
-- 黄金标准示例: `docs/examples/`（minimal / typical / redaction）
+- `decisions` cover all candidate files (including excluded).
+- `findings_summary` totals match actual findings and decisions.
+
+## 3. Compatibility Definition
+
+An implementation is compatible if it:
+
+- Can export/import workspace files without changing their content.
+- Treats `memory/` as an extensible namespace (no hardcoded filenames).
+- Applies strict redaction by default and never exports secrets in plaintext in reports.
+
+## 4. Test Resources
+
+- Golden examples: `docs/examples/` (minimal, typical, redaction)
 - JSON Schema: `docs/schemas/v1/`
-- 建议在 CI 中运行 schema 校验 + 上述所有测试
+- Run schema validation and all above tests in CI.
 
-## 关联文档
+## Related Documents
 
-- 需求: `01-PRD.md`
-- Schema 规范: `03-SCHEMAS.md`
-- CLI 规范: `04-CLI-SPEC.md`
-- 安全模型: `05-SECURITY.md`
+- PRD: `01-PRD.md`
+- Schema: `03-SCHEMAS.md`
+- CLI spec: `04-CLI-SPEC.md`
+- Security: `05-SECURITY.md`
