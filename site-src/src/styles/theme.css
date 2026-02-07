@@ -369,6 +369,49 @@ hr {
   margin: 0 0 var(--space-2);
 }
 
+/* Human/AI flip — same space, hover reveals AI copy (hierarchy unchanged) */
+.human-ai-flip {
+  position: relative;
+  min-height: 1.65em;
+  overflow: hidden;
+}
+
+.human-ai-flip__human {
+  display: block;
+  transition: opacity 0.2s ease;
+}
+
+.human-ai-flip__ai {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.human-ai-flip:hover .human-ai-flip__human {
+  opacity: 0;
+}
+
+.human-ai-flip:hover .human-ai-flip__ai {
+  opacity: 1;
+}
+
+.human-ai-flip-list {
+  list-style: disc;
+  padding-left: var(--space-6);
+}
+
+.human-ai-flip-list li {
+  margin-bottom: var(--space-2);
+}
+
+.human-ai-flip-list li:last-child {
+  margin-bottom: 0;
+}
+
 /* ═══════════════════════════════════════════════════════════
    RIGHT TOC — "On this page"
    Title is AI/structural, links are human-accessible
