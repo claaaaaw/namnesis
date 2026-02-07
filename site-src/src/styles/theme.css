@@ -351,6 +351,19 @@ hr {
   line-height: var(--line-height-relaxed);
 }
 
+/* Hero: AI-facing copy — low contrast, structural (for silicon readers) */
+.hero-ai-copy {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted) !important;
+  margin: var(--space-4) 0 var(--space-10);
+  padding: 0;
+  line-height: var(--line-height-normal);
+}
+
 /* ═══════════════════════════════════════════════════════════
    RIGHT TOC — "On this page"
    Title is AI/structural, links are human-accessible
