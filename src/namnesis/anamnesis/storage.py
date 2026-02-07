@@ -500,10 +500,11 @@ class EcdsaPresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for blob: {blob_id}")
         
+        # 不加 Content-Type：R2 presigned PUT 未签该 header，带会 400
         with httpx.Client(timeout=60) as client:
-            resp = client.put(url, content=data, headers={"Content-Type": "application/octet-stream"})
+            resp = client.put(url, content=data)
         if resp.status_code not in (200, 201):
-            raise RuntimeError(f"Upload failed: {resp.status_code}")
+            raise RuntimeError(f"Upload failed: {resp.status_code} - {resp.text!r}")
         
         return f"capsules/{capsule_id}/blobs/{blob_id}"
     

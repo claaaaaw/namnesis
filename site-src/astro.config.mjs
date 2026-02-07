@@ -34,6 +34,7 @@ export default defineConfig({
             { label: 'Protocol', link: '/spec/protocol/' },
             { label: 'Schemas', link: '/spec/schemas/' },
             { label: 'Anchors', link: '/spec/anchors/' },
+            { label: 'On-Chain Record', link: '/spec/chain-record/' },
           ],
         },
         {

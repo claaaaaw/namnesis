@@ -35,6 +35,21 @@ namnesis/
 └── conformance/           Test fixtures
 ```
 
+## On-Chain Record (Hackathon Verification)
+
+**Network:** Base Sepolia (Chain ID 84532) · **Explorer:** [sepolia.basescan.org](https://sepolia.basescan.org)
+
+| Item | Address / TX | Link |
+|------|--------------|------|
+| SoulToken (The Soul NFT) | `0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4` | [Contract](https://sepolia.basescan.org/address/0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4) |
+| SoulGuard (Pneuma validator) | `0x9e2cef363f0058d36e899a8860f9c76c64e9a775` | [Contract](https://sepolia.basescan.org/address/0x9e2cef363f0058d36e899a8860f9c76c64e9a775) |
+| Demo EOA (Soul #0 holder) | `0x83FfDba20747B0Eca859035C8E64D8237B90d5Cb` | [Account](https://sepolia.basescan.org/address/0x83FfDba20747B0Eca859035C8E64D8237B90d5Cb) |
+| **Imprint TX** (memory upload → on-chain metadata update) | `0x985c3aed25c85bbce208ed86917978d4e0c0f5e11808d74b1023c1fc7e691f01` | [Transaction](https://sepolia.basescan.org/tx/0x985c3aed25c85bbce208ed86917978d4e0c0f5e11808d74b1023c1fc7e691f01) |
+
+Soul #0 · SamsaraCycles: 1 · Memory size: 1897 bytes
+
+> 详细记录见 [docs/CHAIN-RECORDS.md](docs/CHAIN-RECORDS.md)。
+
 ## Placeholder Reference
 
 This document uses `{{placeholders}}` for values to be filled after deployment. Replace them with your deployed values to make the doc actionable.

@@ -8,15 +8,15 @@ name = "namnesis-api"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
-# R2 bucket binding
+# R2 bucket binding（与 worker/.env 中 R2_BUCKET_NAME 一致）
 [[r2_buckets]]
 binding = "R2"
-bucket_name = "<YOUR_R2_BUCKET_NAME>"
+bucket_name = "namnesis-capsules-v2"
 
-# Environment variables (non-sensitive)
+# Environment variables（非敏感项，与 worker/.env 一致）
 [vars]
-R2_ACCOUNT_ID = "<YOUR_CLOUDFLARE_ACCOUNT_ID>"
-R2_BUCKET_NAME = "<YOUR_R2_BUCKET_NAME>"
+R2_ACCOUNT_ID = "713e8c003581f218fd23920912471bb8"
+R2_BUCKET_NAME = "namnesis-capsules-v2"
 # On-chain contract addresses (Base Sepolia) - 来自 ~/.namnesis/.env
 SOUL_TOKEN_ADDRESS = "0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4"
 SOUL_GUARD_ADDRESS = "0x9e2cef363f0058d36e899a8860f9c76c64e9a775"

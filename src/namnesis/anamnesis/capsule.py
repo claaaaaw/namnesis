@@ -33,7 +33,7 @@ from .compression import (
     compress_files,
     decompress_archive,
 )
-from .storage import LocalDirBackend, PresignedUrlBackend, S3Backend, StorageBackend
+from .storage import EcdsaPresignedUrlBackend, LocalDirBackend, PresignedUrlBackend, S3Backend, StorageBackend
 from ..utils import sha256_hex, utc_now_rfc3339, uuidv7
 
 
@@ -437,7 +437,7 @@ def _backend_name(backend: StorageBackend) -> str:
         return "local_dir"
     if isinstance(backend, S3Backend):
         return "s3"
-    if isinstance(backend, PresignedUrlBackend):
+    if isinstance(backend, (PresignedUrlBackend, EcdsaPresignedUrlBackend)):
         return "presigned_url"
     raise CapsuleError(f"Unknown backend type: {type(backend).__name__}")
 
