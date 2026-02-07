@@ -211,6 +211,11 @@ blockquote p:last-child {
   margin-bottom: 0;
 }
 
+/* Prevent blockquote from visually overlapping next flip block */
+blockquote + .human-ai-flip {
+  margin-top: var(--space-4);
+}
+
 /* ═══════════════════════════════════════════════════════════
    TABLES — clean, scannable
    ═══════════════════════════════════════════════════════════ */
@@ -369,25 +374,26 @@ hr {
   margin: 0 0 var(--space-2);
 }
 
-/* Human/AI flip — same space, hover reveals AI copy (hierarchy unchanged) */
+/* Human/AI flip — same cell via grid, hover reveals AI; no absolute = accurate layout */
 .human-ai-flip {
-  position: relative;
+  display: grid;
   min-height: 1.65em;
-  overflow: hidden;
+}
+
+.human-ai-flip__human,
+.human-ai-flip__ai {
+  grid-area: 1 / 1;
+  transition: opacity 0.2s ease;
 }
 
 .human-ai-flip__human {
-  display: block;
-  transition: opacity 0.2s ease;
+  margin: 0;
 }
 
 .human-ai-flip__ai {
-  position: absolute;
-  inset: 0;
   margin: 0;
   padding: 0;
   opacity: 0;
-  transition: opacity 0.2s ease;
   pointer-events: none;
 }
 
@@ -399,7 +405,7 @@ hr {
   opacity: 1;
 }
 
-/* Block variant: multi-line (e.g. doctrine); human sets height, AI overlays */
+/* Block variant: multi-line (doctrine); grid row height = max(both), area accurate */
 .human-ai-flip--block {
   min-height: 0;
 }
@@ -410,6 +416,7 @@ hr {
 
 .human-ai-flip--block .human-ai-flip__ai {
   padding: 0;
+  align-self: start;
 }
 
 .human-ai-flip--block + .human-ai-flip {
