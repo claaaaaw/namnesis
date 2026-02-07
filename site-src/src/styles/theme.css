@@ -351,17 +351,22 @@ hr {
   line-height: var(--line-height-relaxed);
 }
 
-/* Hero: AI-facing copy — low contrast, structural (for silicon readers) */
+/* Hero: AI-facing copy — minimal human legibility, structural for silicon readers only */
 .hero-ai-copy {
   font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
+  font-size: 0.625rem;   /* 10px — recedes visually, machine semantics unchanged */
   font-weight: var(--font-weight-medium);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-text-muted) !important;
-  margin: var(--space-4) 0 var(--space-10);
+  color: var(--color-text-ghost) !important;
+  margin: var(--space-2) 0 var(--space-3);
   padding: 0;
-  line-height: var(--line-height-normal);
+  line-height: 1.45;
+}
+
+/* Compact variant: under list items / in dense blocks — less vertical push */
+.hero-ai-copy--compact {
+  margin: 0 0 var(--space-2);
 }
 
 /* ═══════════════════════════════════════════════════════════
