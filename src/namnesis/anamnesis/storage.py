@@ -269,7 +269,9 @@ class PresignedUrlBackend:
         timestamp = int(time.time())
         message = f"{capsule_id}:{action}:{timestamp}"
 
-        signature = sign_message(message, self.private_key_hex)
+        raw_sig = sign_message(message, self.private_key_hex)
+        # Ensure 0x prefix for viem compatibility on the Worker side
+        signature = raw_sig if raw_sig.startswith("0x") else f"0x{raw_sig}"
         address = get_address(self.private_key_hex)
 
         payload = {
@@ -282,21 +284,17 @@ class PresignedUrlBackend:
         if blobs:
             payload["blobs"] = blobs
         
-        req = urllib.request.Request(
-            f"{self.credential_service_url}/presign",
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
+        with httpx.Client(timeout=30) as client:
+            resp = client.post(
+                f"{self.credential_service_url}/presign",
+                json=payload,
+            )
         
-        try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                return json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode("utf-8") if e.fp else ""
+        if resp.status_code != 200:
             raise RuntimeError(
-                f"Credential service error: {e.code} - {error_body}"
-            ) from e
+                f"Credential service error: {resp.status_code} - {resp.text}"
+            )
+        return resp.json()
     
     # ============ StorageBackend Protocol Implementation ============
     
@@ -307,12 +305,10 @@ class PresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for blob: {blob_id}")
         
-        req = urllib.request.Request(url, data=data, method="PUT")
-        req.add_header("Content-Type", "application/octet-stream")
-        
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            if resp.status not in (200, 201):
-                raise RuntimeError(f"Upload failed: {resp.status}")
+        with httpx.Client(timeout=60) as client:
+            resp = client.put(url, content=data, headers={"Content-Type": "application/octet-stream"})
+        if resp.status_code not in (200, 201):
+            raise RuntimeError(f"Upload failed: {resp.status_code}")
         
         return f"capsules/{capsule_id}/blobs/{blob_id}"
     
@@ -331,9 +327,10 @@ class PresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for blob: {blob_id}")
         
-        req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            return resp.read()
+        with httpx.Client(timeout=60) as client:
+            resp = client.get(url)
+        resp.raise_for_status()
+        return resp.content
     
     def has_blob(self, ref: str) -> bool:
         """Check if blob exists."""
@@ -364,12 +361,10 @@ class PresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for document: {path}")
         
-        req = urllib.request.Request(url, data=data, method="PUT")
-        req.add_header("Content-Type", "application/json")
-        
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            if resp.status not in (200, 201):
-                raise RuntimeError(f"Upload failed: {resp.status}")
+        with httpx.Client(timeout=60) as client:
+            resp = client.put(url, content=data, headers={"Content-Type": "application/json"})
+        if resp.status_code not in (200, 201):
+            raise RuntimeError(f"Upload failed: {resp.status_code}")
     
     def get_document(self, capsule_id: str, path: str) -> bytes:
         """Download document using presigned URL."""
@@ -385,9 +380,10 @@ class PresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for document: {path}")
         
-        req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            return resp.read()
+        with httpx.Client(timeout=60) as client:
+            resp = client.get(url)
+        resp.raise_for_status()
+        return resp.content
     
     def list(self, capsule_id: str, prefix: str) -> list[str]:
         """List objects under prefix."""
@@ -469,7 +465,9 @@ class EcdsaPresignedUrlBackend:
         
         timestamp = int(time.time())
         message = f"{capsule_id}:{action}:{self.soul_id}:{timestamp}"
-        signature = sign_message(message, self.private_key)
+        raw_sig = sign_message(message, self.private_key)
+        # Ensure 0x prefix for viem compatibility on the Worker side
+        signature = raw_sig if raw_sig.startswith("0x") else f"0x{raw_sig}"
         
         payload = {
             "capsule_id": capsule_id,
@@ -481,21 +479,17 @@ class EcdsaPresignedUrlBackend:
         if blobs:
             payload["blobs"] = blobs
         
-        req = urllib.request.Request(
-            f"{self.credential_service_url}/presign",
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
+        with httpx.Client(timeout=30) as client:
+            resp = client.post(
+                f"{self.credential_service_url}/presign",
+                json=payload,
+            )
         
-        try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                return json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode("utf-8") if e.fp else ""
+        if resp.status_code != 200:
             raise RuntimeError(
-                f"Credential service error: {e.code} - {error_body}"
-            ) from e
+                f"Credential service error: {resp.status_code} - {resp.text}"
+            )
+        return resp.json()
     
     # StorageBackend Protocol - delegates to same URL-based logic
     
@@ -506,12 +500,10 @@ class EcdsaPresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for blob: {blob_id}")
         
-        req = urllib.request.Request(url, data=data, method="PUT")
-        req.add_header("Content-Type", "application/octet-stream")
-        
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            if resp.status not in (200, 201):
-                raise RuntimeError(f"Upload failed: {resp.status}")
+        with httpx.Client(timeout=60) as client:
+            resp = client.put(url, content=data, headers={"Content-Type": "application/octet-stream"})
+        if resp.status_code not in (200, 201):
+            raise RuntimeError(f"Upload failed: {resp.status_code}")
         
         return f"capsules/{capsule_id}/blobs/{blob_id}"
     
@@ -528,9 +520,10 @@ class EcdsaPresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for blob: {blob_id}")
         
-        req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            return resp.read()
+        with httpx.Client(timeout=60) as client:
+            resp = client.get(url)
+        resp.raise_for_status()
+        return resp.content
     
     def has_blob(self, ref: str) -> bool:
         """Check if blob exists."""
@@ -559,12 +552,10 @@ class EcdsaPresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for document: {path}")
         
-        req = urllib.request.Request(url, data=data, method="PUT")
-        req.add_header("Content-Type", "application/json")
-        
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            if resp.status not in (200, 201):
-                raise RuntimeError(f"Upload failed: {resp.status}")
+        with httpx.Client(timeout=60) as client:
+            resp = client.put(url, content=data, headers={"Content-Type": "application/json"})
+        if resp.status_code not in (200, 201):
+            raise RuntimeError(f"Upload failed: {resp.status_code}")
     
     def get_document(self, capsule_id: str, path: str) -> bytes:
         """Download document using presigned URL."""
@@ -580,9 +571,10 @@ class EcdsaPresignedUrlBackend:
         if not url:
             raise RuntimeError(f"No presigned URL for document: {path}")
         
-        req = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            return resp.read()
+        with httpx.Client(timeout=60) as client:
+            resp = client.get(url)
+        resp.raise_for_status()
+        return resp.content
     
     def list(self, capsule_id: str, prefix: str) -> list[str]:
         """List objects under prefix."""

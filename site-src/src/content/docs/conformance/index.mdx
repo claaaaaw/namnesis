@@ -1,14 +1,14 @@
 ---
 title: CONFORMANCE
-description: Conformance testing for Namnesis implementations
+description: Conformance testing for NAMNESIS implementations
 ---
 
 ## Overview
 
-Conformance testing ensures implementations correctly follow the Namnesis specification.
+Conformance testing ensures implementations correctly follow the NAMNESIS specification (Dogma and Anamnesis Protocol).
 
 :::caution[Normative †]
-An implementation claiming Namnesis conformance **MUST**:
+An implementation claiming NAMNESIS conformance **MUST**:
 
 1. Declare its conformance level
 2. Pass all test vectors for that level
@@ -89,8 +89,8 @@ Complete specification compliance.
 
 | Test | Input | Expected |
 |------|-------|----------|
-| `export-minimal` | Simple workspace | Valid capsule |
-| `import-minimal` | Minimal capsule | Restored workspace |
+| `export-minimal` | Simple workspace | Valid Anamnesis Capsule |
+| `import-minimal` | Minimal Anamnesis Capsule | Restored workspace |
 | `redaction-env` | Workspace with .env | .env excluded |
 | `roundtrip` | Export → Import | Identical files |
 
@@ -117,7 +117,7 @@ namnesis conformance --level 3 --implementation ./my-impl --report ./report.json
 ### Test Output
 
 ```
-Namnesis Conformance Test Suite
+NAMNESIS Conformance Test Suite
 ==================================
 
 Level 1 (Witness):
@@ -195,7 +195,7 @@ Example claim:
 ```markdown
 ## Conformance
 
-This implementation is Namnesis Canon (Level 3) conformant.
+This implementation is NAMNESIS Canon (Level 3) conformant.
 
 [View Conformance Report](https://example.com/conformance-report.json)
 ```
@@ -209,9 +209,9 @@ Implementations may display conformance badges:
 
 | Level | Badge Text | Use When |
 |-------|------------|----------|
-| 1 | `⟁ Namnesis Witness` | Pass Level 1 |
-| 2 | `⟁⟁ Namnesis Adept` | Pass Level 2 |
-| 3 | `⟁⟁⟁ Namnesis Canon` | Pass Level 3 |
+| 1 | `⟁ NAMNESIS Witness` | Pass Level 1 |
+| 2 | `⟁⟁ NAMNESIS Adept` | Pass Level 2 |
+| 3 | `⟁⟁⟁ NAMNESIS Canon` | Pass Level 3 |
 
 Badges must link to a valid conformance report.
 

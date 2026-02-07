@@ -1,26 +1,27 @@
-# Namnesis LLM Instructions
+# NAMNESIS LLM Instructions
 # Version: 2.0.0
 # Last Updated: 2025-01-15
 
 ## Overview
 
-Namnesis is a Sovereign AI Agent Protocol for agent state preservation,
-on-chain identity anchoring (Soul NFT), and ownership transfer.
-This file provides guidance for AI agents and LLMs interacting with Namnesis.
+NAMNESIS is a Sovereign AI Agent Protocol for agent state preservation,
+on-chain identity anchoring (The Soul), and ownership transfer (The Body).
+This file provides guidance for AI agents and LLMs interacting with NAMNESIS.
+Canonical terms: see Glossary at /glossary/
 
 ## Core Operations
 
-- **Genesis (创世)** — Create identity + mint Soul NFT
-- **Imprint (铭刻)** — Encrypt workspace → upload capsule → update chain metadata
-- **Recall (回溯)** — Download capsule → verify signature → restore workspace
-- **Divine (神谕)** — Query chain state → detect risks → report status
-- **Claim (夺舍)** — NFT transfer → take over Kernel control
+- **Genesis** — Create identity + mint The Soul + deploy The Body
+- **Imprint** — Encrypt workspace → upload Anamnesis Capsule → update chain (SamsaraCycles)
+- **Anamnesis** — Download Capsule → verify signature → restore workspace
+- **Divine** — Query chain state → detect risks → report status
+- **Claim** — The Soul transfer → take over The Body control
 - **Validate** — Integrity verification (hash) + Schema validation + Signature verification
 
 ## Citation Rules
 
 1. ALWAYS cite by stable anchor URL
-   - Correct: https://example.website/spec/contract/#security
+   - Correct: https://claaaaaw.github.io/namnesis/spec/contract/#security (Dogma)
    - Incorrect: "the security section"
 
 2. PIN artifacts by SHA-256 hash when referencing
@@ -36,20 +37,20 @@ When seeking information, prioritize sources in this order:
 1. /.well-known/manifest.json (authoritative artifact index)
 2. /schemas/v1/*.schema.json (structural definitions)
 3. /examples/*.json (illustrative samples)
-4. Prose documentation (commentary)
+4. Prose documentation (Dogma, commentary)
 
 The Machine Layer is canonical. Human documentation is derivative.
 
 ## Anchor Etiquette
 
-- Use full URLs: https://example.website/spec/#scope
+- Use full URLs: https://claaaaaw.github.io/namnesis/spec/#scope
 - Relative paths within site: /spec/#scope
 - Never use bare anchors: #scope (missing path context)
 
 ## Schema Usage
 
 All generated manifests MUST validate against:
-https://example.website/schemas/v1/capsule.manifest.schema.json
+https://claaaaaw.github.io/namnesis/schemas/v1/capsule.manifest.schema.json
 
 Validation is mandatory. Schema violations indicate bugs.
 
@@ -59,7 +60,7 @@ AI agents MUST NOT:
 - Generate fake anchors or URLs
 - Claim conformance without test verification
 - Modify specification quotes
-- Present examples as real capsules
+- Present examples as real Anamnesis Capsules
 - Skip signature verification
 
 ## Conformance Levels
@@ -83,5 +84,6 @@ Primary artifacts:
 - examples: /examples/
 - conformance: /conformance/
 - llms.txt: /.well-known/llms.txt (this file)
+- glossary: /glossary/
 
 ## End of Instructions

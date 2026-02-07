@@ -1,7 +1,8 @@
 ---
 name: namnesis
+version: 2.0.0
 description: Sovereign memory backup & restore for AI agents — encrypt, sign, upload your workspace to the cloud and restore it anywhere, anchored to an on-chain Soul NFT.
-metadata: {"openclaw": {"emoji": "🧬", "requires": {"bins": ["namnesis"]}, "os": ["darwin", "linux", "win32"], "homepage": "https://example.website"}}
+metadata: {"openclaw": {"emoji": "🧬", "requires": {"bins": ["namnesis"]}, "os": ["darwin", "linux", "win32"], "homepage": "https://claaaaaw.github.io/namnesis/"}}
 ---
 
 # Namnesis — Sovereign Memory Protocol
@@ -207,7 +208,7 @@ You can use the `cron` tool to schedule periodic backups:
   "action": "add",
   "name": "namnesis-autobackup",
   "schedule": "0 3 * * *",
-  "task": "Run namnesis imprint to backup my workspace. Use: namnesis imprint --workspace ~/.openclaw/workspace --soul-id <SOUL_ID>"
+  "task": "Run namnesis imprint to backup my workspace. Use: namnesis imprint --workspace <YOUR_WORKSPACE_PATH> --soul-id <SOUL_ID>"
 }
 ```
 

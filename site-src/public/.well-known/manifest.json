@@ -1,5 +1,5 @@
 {
-  "name": "namnesis",
+  "name": "NAMNESIS",
   "description": "Sovereign AI Agent Protocol — A covenant for continuity between agents",
   "spec_version": "2.0.0",
   "generated_at": "2025-01-15T00:00:00Z",
@@ -7,50 +7,50 @@
     {
       "path": "/schemas/v1/capsule.manifest.schema.json",
       "type": "schema",
-      "sha256": "pending",
-      "bytes": 0,
-      "description": "Capsule manifest schema"
+      "sha256": "280b595189bfd4e28b1aa2c6311d3562b8fa5647f7d16f964bae3751705ac725",
+      "bytes": 5812,
+      "description": "Anamnesis Capsule manifest schema"
     },
     {
       "path": "/schemas/v1/redaction.report.schema.json",
       "type": "schema",
-      "sha256": "pending",
-      "bytes": 0,
+      "sha256": "5a5913fdc6f9df4f5a360aab1cdd4ef3bd5b2785a1fffdb0f236555a4b1d1256",
+      "bytes": 4723,
       "description": "Redaction report schema"
     },
     {
       "path": "/schemas/v1/restore.report.schema.json",
       "type": "schema",
-      "sha256": "pending",
-      "bytes": 0,
+      "sha256": "14f50dcada2e940908ef2efab4eecd5f1be6fd148bed7e38834748ad72128822",
+      "bytes": 3099,
       "description": "Restore report schema"
     },
     {
       "path": "/examples/minimal.json",
       "type": "example",
-      "sha256": "pending",
-      "bytes": 0,
-      "description": "Minimal valid capsule example"
+      "sha256": "58d89b3ff60ba81c599bcc2b2eef8c7b3a61ce7d2eee74a47cb50e3575c8f36f",
+      "bytes": 1798,
+      "description": "Minimal valid Anamnesis Capsule example"
     },
     {
       "path": "/examples/typical.json",
       "type": "example",
-      "sha256": "pending",
-      "bytes": 0,
-      "description": "Typical capsule example"
+      "sha256": "88316854d6ac0b00c61c6517fa8da13abfde44d6c99613d98fc9502ef1e49bac",
+      "bytes": 3129,
+      "description": "Typical Anamnesis Capsule example"
     },
     {
       "path": "/conformance/levels.json",
       "type": "conformance",
-      "sha256": "pending",
-      "bytes": 0,
+      "sha256": "02cc4c903c549700992728fd9502736146f2561d90bc4a9d0e038b4d350a2e5c",
+      "bytes": 2900,
       "description": "Conformance level definitions"
     },
     {
       "path": "/.well-known/llms.txt",
       "type": "llm-instructions",
-      "sha256": "pending",
-      "bytes": 0,
+      "sha256": "19338ecb085c6833e65f1ccbba4ed228f96e3ca3048ff879ddd63127be88b712",
+      "bytes": 2708,
       "description": "LLM usage instructions"
     }
   ],
@@ -61,6 +61,6 @@
     "conformance": "/conformance/"
   },
   "links": {
-    "documentation": "https://example.website/spec/"
+    "documentation": "https://claaaaaw.github.io/namnesis/spec/"
   }
 }

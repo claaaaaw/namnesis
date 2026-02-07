@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://openclaw.ai/specs/resurrectum/schemas/v1/redaction.report.schema.json",
-  "title": "Resurrectum Redaction Report v1",
+  "$id": "https://namnesis.dev/schemas/v1/redaction.report.schema.json",
+  "title": "Namnesis Redaction Report v1",
   "type": "object",
   "additionalProperties": false,
   "patternProperties": { "^x_": {} },

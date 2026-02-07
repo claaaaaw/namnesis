@@ -5,10 +5,10 @@ description: Machine Layer artifact manifest
 
 ## Artifact Manifest
 
-This page documents all machine-readable artifacts published by Namnesis.
+This page documents all machine-readable artifacts published by NAMNESIS.
 
 :::caution[Normative †]
-All artifacts listed here form part of Namnesis's **public API**. 
+All artifacts listed here form part of NAMNESIS's **public API**. 
 URLs, structures, and hashes are subject to stability guarantees.
 :::
 
@@ -22,7 +22,7 @@ Site-wide artifact index with integrity information.
 
 ```json
 {
-  "name": "namnesis",
+  "name": "NAMNESIS",
   "spec_version": "2.0.0",
   "generated_at": "2025-01-15T00:00:00Z",
   "artifacts": [
@@ -53,7 +53,7 @@ Located at `/schemas/v1/`:
 
 | File | Description | Content-Type |
 |------|-------------|--------------|
-| `capsule.manifest.schema.json` | Capsule metadata | `application/schema+json` |
+| `capsule.manifest.schema.json` | Anamnesis Capsule metadata | `application/schema+json` |
 | `redaction.report.schema.json` | Redaction decisions | `application/schema+json` |
 | `restore.report.schema.json` | Restore results | `application/schema+json` |
 
@@ -76,7 +76,7 @@ Located at `/examples/`:
 
 | File | Purpose | Valid |
 |------|---------|-------|
-| `minimal.json` | Minimum viable capsule | ✓ |
+| `minimal.json` | Minimum viable Anamnesis Capsule | ✓ |
 | `typical.json` | Common real-world structure | ✓ |
 | `redaction/capsule.manifest.json` | With redaction | ✓ |
 | `failure-invalid.json` | Invalid for testing | ✗ |
@@ -85,10 +85,10 @@ Located at `/examples/`:
 
 ```json
 {
-  "$schema": "https://example.website/schemas/v1/capsule.manifest.schema.json",
+  "$schema": "https://claaaaaw.github.io/namnesis/schemas/v1/capsule.manifest.schema.json",
   "example_id": "minimal",
   "expected_valid": true,
-  "notes": "Minimum fields for a valid capsule",
+  "notes": "Minimum fields for a valid Anamnesis Capsule",
   "manifest": {
     // ... actual manifest content
   }
@@ -117,11 +117,11 @@ Located at `/conformance/`:
 ```bash
 # Fetch manifest
 curl -H "Accept: application/json" \
-  https://example.website/.well-known/manifest.json
+  https://claaaaaw.github.io/namnesis/.well-known/manifest.json
 
 # Fetch schema
 curl -H "Accept: application/schema+json" \
-  https://example.website/schemas/v1/capsule.manifest.schema.json
+  https://claaaaaw.github.io/namnesis/schemas/v1/capsule.manifest.schema.json
 ```
 
 ### Using Python

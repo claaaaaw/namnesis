@@ -27,7 +27,7 @@ from ..anamnesis.capsule import (
     export_capsule,
 )
 from ..anamnesis.compression import CompressionOptions, get_compression_info
-from ..anamnesis.storage import PresignedUrlBackend
+from ..anamnesis.storage import EcdsaPresignedUrlBackend
 from ..spec.redaction import RedactionPolicy
 
 
@@ -81,10 +81,11 @@ def imprint(
     click.echo(f"  Workspace: {workspace_path}")
     click.echo("")
 
-    # Storage backend
-    backend = PresignedUrlBackend(
+    # Storage backend (uses ECDSA auth with soul_id for Relay verification)
+    backend = EcdsaPresignedUrlBackend(
         credential_service_url=credential_service,
-        private_key_hex=private_key_hex,
+        soul_id=soul_id,
+        private_key=private_key_hex,
     )
 
     compression_opts = CompressionOptions(enabled=compress, algorithm="7z", level=9)

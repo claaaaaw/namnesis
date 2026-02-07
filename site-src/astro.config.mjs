@@ -22,10 +22,14 @@ export default defineConfig({
           link: '/',
         },
         {
+          label: 'Glossary',
+          link: '/glossary/',
+        },
+        {
           label: 'SPEC',
           items: [
             { label: 'Overview', link: '/spec/' },
-            { label: 'Contract', link: '/spec/contract/' },
+            { label: 'Dogma', link: '/spec/contract/' },
             { label: 'Protocol', link: '/spec/protocol/' },
             { label: 'Schemas', link: '/spec/schemas/' },
             { label: 'Anchors', link: '/spec/anchors/' },

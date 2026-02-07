@@ -243,11 +243,19 @@ Namnesis 已封装为 [AgentSkills](https://agentskills.io) 兼容的 **Skill**�
 ### 安装 Skill
 
 ```bash
-# 安装到当前 Agent 的 workspace（仅当前 Agent 可用）
+# macOS/Linux：安装到当前 Agent 的 workspace（仅当前 Agent 可用）
 cp -r openclaw/skills/namnesis ~/.openclaw/workspace/skills/namnesis
 
-# 或安装到全局 skills（所有 Agent 共享）
+# macOS/Linux：安装到全局 skills（所有 Agent 共享）
 cp -r openclaw/skills/namnesis ~/.openclaw/skills/namnesis
+```
+
+```powershell
+# Windows PowerShell：安装到当前 Agent 的 workspace
+Copy-Item -Recurse openclaw\skills\namnesis "$env:USERPROFILE\.openclaw\workspace\skills\namnesis"
+
+# Windows PowerShell：安装到全局 skills
+Copy-Item -Recurse openclaw\skills\namnesis "$env:USERPROFILE\.openclaw\skills\namnesis"
 ```
 
 ### 前置条件
@@ -277,7 +285,7 @@ Agent 也会在适当时机（迁移前、定期、风险操作前）主动备�
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-org/namnesis.git
+git clone https://github.com/claaaaaw/namnesis.git
 cd namnesis
 
 # 创建虚拟环境

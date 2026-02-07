@@ -1,11 +1,11 @@
 ---
 title: SPEC
-description: Human-readable specification for Namnesis
+description: Human-readable specification for NAMNESIS
 ---
 
 ## Overview
 
-This section contains the human-readable specification for Namnesis. 
+This section contains the human-readable specification for NAMNESIS.
 The Machine Layer is canonical; this documentation serves as commentary.
 
 :::note[Reading Guide]
@@ -18,13 +18,15 @@ The Machine Layer is canonical; this documentation serves as commentary.
 
 ## Scope
 
-Namnesis specifies:
+NAMNESIS specifies:
 
-1. **Capsule Format** — The structure for preserved agent state
+1. **Anamnesis Capsule Format** — The structure for preserved agent state (Anamnesis Protocol)
 2. **Manifest Schema** — Metadata and integrity information
 3. **Cryptographic Requirements** — Encryption, signing, and verification
 4. **Redaction Policy** — What data is included/excluded
 5. **Conformance Levels** — Implementation compliance requirements
+
+See the [Glossary](/glossary/) for canonical terms (The Soul, The Body, Theurgy CLI, Pneuma Validator, Anamnesis Protocol, Genesis, Imprint, Anamnesis, Divine, Claim, SamsaraCycles, Dogma).
 
 ---
 
@@ -32,18 +34,17 @@ Namnesis specifies:
 
 | Term | Definition |
 |------|------------|
-| **Capsule** | An encrypted, signed archive containing agent state |
+| **Anamnesis Capsule** | An encrypted, signed archive containing agent state (see [Glossary](/glossary/)) |
 | **Manifest** | JSON document describing capsule contents and integrity |
 | **Artifact** | A single file or datum within a capsule |
 | **Blob** | Encrypted binary data referenced by manifest |
-| **Sigil** | Status marker (†, ⟂, ⊕, ⊗, ◇) |
 | **Anchor** | Stable URL fragment identifier |
 
 ---
 
 ## Quick Links
 
-- [Contract](./contract/) — Primary specification document
+- [Dogma](./contract/) — Primary normative document (Contract)
 - [Protocol](./protocol/) — Wire format and operations
 - [Schemas](./schemas/) — JSON Schema reference
 - [Anchors](./anchors/) — Stable anchor registry
@@ -56,7 +57,7 @@ Implementations **MUST** pass the official conformance test suite.
 See [Conformance Tests](../conformance/) for details.
 
 :::caution[Normative †]
-An implementation claiming Namnesis conformance **MUST**:
+An implementation claiming NAMNESIS conformance **MUST**:
 
 1. Produce manifests that validate against the canonical schema
 2. Support all required cryptographic algorithms

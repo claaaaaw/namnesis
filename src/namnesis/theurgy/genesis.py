@@ -34,8 +34,8 @@ from ..sigil.eth import (
 # These are baked into genesis so that `namnesis genesis` produces a
 # fully-functional ~/.namnesis/.env without any manual editing.
 _DEFAULTS: dict[str, str] = {
-    "SOUL_TOKEN_ADDRESS": "0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4",
-    "SOUL_GUARD_ADDRESS": "0x9e2cef363f0058d36e899a8860f9c76c64e9a775",
+    "SOUL_TOKEN_ADDRESS": "0x7da34a285b8bc5def26a7204d576ad331f405200",
+    "SOUL_GUARD_ADDRESS": "0x433bf2d2b72a7cf6cf682d90a10b00331d6c18d4",
     "OWNABLE_EXECUTOR_ADDRESS": "0x4Fd8d57b94966982B62e9588C27B4171B55E8354",
     "USDC_ADDRESS": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
     "BASE_SEPOLIA_RPC": "https://sepolia.base.org",

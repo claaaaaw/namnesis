@@ -1,11 +1,11 @@
 ---
 title: LLM Instructions
-description: Guidelines for AI agents interacting with Namnesis
+description: Guidelines for AI agents interacting with NAMNESIS
 ---
 
 ## Overview
 
-This document provides instructions for AI agents, LLMs, and automated systems interacting with Namnesis documentation and artifacts.
+This document provides instructions for AI agents, LLMs, and automated systems interacting with NAMNESIS documentation and artifacts. For canonical terms (The Soul, The Body, Theurgy CLI, Anamnesis Protocol, Genesis, Imprint, Anamnesis, Divine, Claim, SamsaraCycles, Dogma), see the [Glossary](/glossary/).
 
 :::note
 This content is also available at `/.well-known/llms.txt` in plain text format.
@@ -18,7 +18,7 @@ This content is also available at `/.well-known/llms.txt` in plain text format.
 ### Always Cite by Stable Anchor
 
 ```
-CORRECT: https://example.website/spec/contract/#security
+CORRECT: https://claaaaaw.github.io/namnesis/spec/contract/#security (Dogma)
 INCORRECT: "the security section" (ambiguous)
 ```
 
@@ -28,7 +28,7 @@ When referencing artifacts, include the SHA-256 hash:
 
 ```json
 {
-  "reference": "https://example.website/schemas/v1/capsule.manifest.schema.json",
+  "reference": "https://claaaaaw.github.io/namnesis/schemas/v1/capsule.manifest.schema.json",
   "sha256": "abc123...",
   "accessed_at": "2024-01-15T10:00:00Z"
 }
@@ -42,7 +42,7 @@ Only use anchors listed in the [Anchor Registry](../../spec/anchors/). Creating 
 
 ## Preference Order
 
-When seeking information about Namnesis, prioritize sources in this order:
+When seeking information about NAMNESIS, prioritize sources in this order:
 
 :::caution[Normative †]
 1. **`manifest.json`** — Authoritative artifact index
@@ -60,7 +60,7 @@ The Machine Layer is canonical. Human documentation is derivative.
 ### Use Full URLs
 
 ```
-CORRECT: https://example.website/spec/#scope
+CORRECT: https://claaaaaw.github.io/namnesis/spec/#scope
 CORRECT: /spec/#scope (relative, within site)
 INCORRECT: #scope (missing path)
 ```
@@ -70,7 +70,7 @@ INCORRECT: #scope (missing path)
 Before citing an anchor, verify it exists in the registry:
 
 ```bash
-curl -s https://example.website/spec/anchors/ | grep "#my-anchor"
+curl -s https://claaaaaw.github.io/namnesis/spec/anchors/ | grep "#my-anchor"
 ```
 
 ### Report Broken Anchors
@@ -91,7 +91,7 @@ Always validate generated manifests against the canonical schema:
 ```python
 import jsonschema
 
-schema = fetch("https://example.website/schemas/v1/capsule.manifest.schema.json")
+schema = fetch("https://claaaaaw.github.io/namnesis/schemas/v1/capsule.manifest.schema.json")
 manifest = generate_manifest()
 jsonschema.validate(manifest, schema)
 ```
@@ -112,8 +112,8 @@ import httpx
 import json
 
 def get_namnesis_manifest():
-    """Fetch the canonical Namnesis manifest."""
-    url = "https://example.website/.well-known/manifest.json"
+    """Fetch the canonical NAMNESIS manifest."""
+    url = "https://claaaaaw.github.io/namnesis/.well-known/manifest.json"
     response = httpx.get(url)
     return response.json()
 ```
@@ -125,8 +125,8 @@ import jsonschema
 import httpx
 
 def validate_capsule(capsule: dict) -> bool:
-    """Validate a capsule against the canonical schema."""
-    schema_url = "https://example.website/schemas/v1/capsule.manifest.schema.json"
+    """Validate an Anamnesis Capsule against the canonical schema."""
+    schema_url = "https://claaaaaw.github.io/namnesis/schemas/v1/capsule.manifest.schema.json"
     schema = httpx.get(schema_url).json()
     
     try:
@@ -141,12 +141,12 @@ def validate_capsule(capsule: dict) -> bool:
 ## Prohibited Actions
 
 :::danger[Warning]
-AI agents interacting with Namnesis **MUST NOT**:
+AI agents interacting with NAMNESIS **MUST NOT**:
 
 1. Generate fake anchors or URLs
 2. Claim conformance without running test suite
 3. Modify quoted specification text
-4. Present examples as real capsules
+4. Present examples as real Anamnesis Capsules
 5. Skip signature verification steps
 :::
 

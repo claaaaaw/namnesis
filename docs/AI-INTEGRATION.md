@@ -62,11 +62,19 @@ SOUL_GUARD_ADDRESS=0x...
 将 Skill 目录复制到 OpenClaw 的 skills 目录中：
 
 ```bash
-# 方式 A：安装到当前 Agent 的 workspace（仅当前 Agent 可用）
+# macOS/Linux 方式 A：安装到当前 Agent 的 workspace（仅当前 Agent 可用）
 cp -r openclaw/skills/namnesis ~/.openclaw/workspace/skills/namnesis
 
-# 方式 B：安装到全局 skills（所有 Agent 共享）
+# macOS/Linux 方式 B：安装到全局 skills（所有 Agent 共享）
 cp -r openclaw/skills/namnesis ~/.openclaw/skills/namnesis
+```
+
+```powershell
+# Windows 方式 A：
+Copy-Item -Recurse openclaw\skills\namnesis "$env:USERPROFILE\.openclaw\workspace\skills\namnesis"
+
+# Windows 方式 B：
+Copy-Item -Recurse openclaw\skills\namnesis "$env:USERPROFILE\.openclaw\skills\namnesis"
 ```
 
 #### 5. 验证 Skill 已加载
@@ -139,5 +147,5 @@ namnesis/
 - Namnesis PRD: `docs/01-PRD.md`
 - Namnesis 架构: `docs/02-ARCHITECTURE.md`
 - Namnesis CLI 规范: `docs/04-CLI-SPEC.md`
-- OpenClaw Skills 文档: https://docs.openclaw.ai/tools/skills
-- OpenClaw Agent Workspace: https://docs.openclaw.ai/concepts/agent-workspace
+- OpenClaw Skills 文档: https://agentskills.io
+- 项目代码库: https://github.com/claaaaaw/namnesis

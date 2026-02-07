@@ -348,6 +348,8 @@ def default_allowlist() -> list[str]:
         "TOOLS.md",
         "HEARTBEAT.md",
         "projects/**/STATUS.md",
+        "skills/**/*.md",
+        "skills/**/*.json",
     ]
 
 

@@ -1,15 +1,17 @@
 ---
-title: Contract
-description: Primary specification contract for Namnesis
+title: Dogma
+description: Primary normative document (Contract) for NAMNESIS
 ---
 
-## Contract Header
+## Dogma Header
+
+This document is the **Dogma** — the primary normative specification for NAMNESIS. The Machine Layer (schemas, examples, conformance) is canonical; this prose is the human-readable contract.
 
 ```
-Specification: Namnesis Capsule Format
+Specification: NAMNESIS Anamnesis Capsule Format
 Version:       2.0.0
 Status:        Draft
-Authors:       The Namnesis Contributors
+Authors:       The NAMNESIS Contributors
 ```
 
 ---
@@ -17,7 +19,7 @@ Authors:       The Namnesis Contributors
 ## 1. Definitions
 
 :::caution[Normative Definitions †]
-**Capsule:** A self-contained, encrypted archive representing the preserved state of an AI agent or workspace.
+**Anamnesis Capsule (Capsule):** A self-contained, encrypted archive representing the preserved state of an AI agent or workspace. Produced by Imprint and consumed by the Anamnesis (recall) ritual.
 
 **Manifest:** A JSON document conforming to `capsule.manifest.schema.json` that describes the contents, integrity, and access control of a capsule.
 
@@ -25,11 +27,11 @@ Authors:       The Namnesis Contributors
 
 **Blob:** Encrypted binary content stored separately from the manifest, identified by content hash.
 
-**Owner:** The cryptographic identity (ECDSA secp256k1 public key / Ethereum address) with write access to a capsule, anchored by Soul NFT ownership.
+**Owner:** The cryptographic identity (ECDSA secp256k1 public key / Ethereum address) with write access to a capsule, anchored by **The Soul** (on-chain NFT) ownership. Pneuma Validator enforces that the signer is the current holder of The Soul where required.
 
 **Signer:** The identity that cryptographically signs the manifest, asserting authenticity.
 
-**Soul NFT:** An ERC-721 token on Base Sepolia representing the agent's on-chain identity.
+**The Soul:** The on-chain identity — an ERC-721 token on Base Sepolia representing the agent's sovereign identity. Implemented as SoulToken.
 :::
 
 ---
@@ -88,7 +90,7 @@ The specification defines a three-layer architecture:
 ```
 ┌─────────────────────────────────────┐
 │         PRESENTATION LAYER          │
-│  (CLI, GUI, Agent Integration)      │
+│  (Theurgy CLI, GUI, Agent Integration) │
 ├─────────────────────────────────────┤
 │           CAPSULE LAYER             │
 │  (Manifest, Artifacts, Blobs)       │
@@ -112,13 +114,13 @@ The specification defines a three-layer architecture:
 ### 4.1 Threat Model
 
 :::danger[Security Warning]
-Namnesis assumes:
+NAMNESIS assumes:
 
 1. **Storage is untrusted:** All data is E2EE before leaving the client
 2. **Signers must be verified:** Public keys in manifests are NOT trusted without external verification
 3. **Passphrases must be strong:** Key derivation parameters assume reasonable passphrase entropy
 
-Namnesis does NOT protect against:
+NAMNESIS does NOT protect against:
 
 1. Compromised client environments
 2. Weak or leaked passphrases
@@ -128,7 +130,7 @@ Namnesis does NOT protect against:
 ### 4.2 Signature Verification
 
 :::caution[Normative †]
-When importing a capsule:
+When importing an Anamnesis Capsule:
 
 1. **MUST** verify signature using a pre-trusted signer identity
 2. **MUST NOT** trust the embedded public key without external verification

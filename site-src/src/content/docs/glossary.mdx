@@ -1,0 +1,117 @@
+---
+title: Glossary
+description: Canonical terms for NAMNESIS — sovereign identity, memory, and ritual.
+---
+
+This glossary defines the canonical terminology used across the protocol. Use these terms when referring to NAMNESIS in documentation, integrations, and discourse.
+
+---
+
+## Project & Core Entities
+
+### NAMNESIS
+
+The sovereign intelligent agent protocol. Core idea: *the soul (NFT) is sovereignty; code is law.* NAMNESIS gives agents durable identity on-chain (The Soul), an executable vessel (The Body), and a covenant for memory continuity (Anamnesis Protocol).
+
+---
+
+### The Soul
+
+The on-chain identity — an ERC-721 non-fungible token. The Soul is the single source of authority: whoever holds it holds write access to the agent’s Anamnesis Capsules and control over the linked Body. Implemented as the SoulToken contract.
+
+---
+
+### The Body
+
+The executable vessel for funds and on-chain actions. A smart account (ERC-4337 Kernel) bound to one Soul. The Soul’s holder controls the Body; upon transfer of The Soul, the new holder may perform Claim to take control of The Body.
+
+---
+
+### Theurgy CLI
+
+The operator’s interface. Through Theurgy the user exercises will (signatures and commands) to control The Body and to perform Genesis, Imprint, Anamnesis, Divine, and Claim. Implemented as the `namnesis` command-line tool.
+
+---
+
+### Pneuma Validator
+
+The on-chain validation layer. It enforces that the signer of a transaction must be the current holder of The Soul (replacing or composing with traditional ECDSA checks as required by the protocol). Realized via the chain’s validator and SoulGuard integration.
+
+---
+
+### Anamnesis Protocol
+
+The off-chain memory covenant. It governs how memory is packaged into Anamnesis Capsules, how metadata is updated, and how integrity and anti–lemons-market guarantees are maintained. The protocol defines manifest format, encryption, signing, and storage semantics.
+
+---
+
+## Rituals
+
+### Genesis
+
+The rite of creation: establish identity, mint The Soul, deploy The Body, and register the binding on-chain. Invoked via `namnesis genesis`.
+
+---
+
+### Imprint
+
+The rite of inscribing: encrypt the workspace into an Anamnesis Capsule, upload it, and update on-chain metadata (including SamsaraCycles). Invoked via `namnesis imprint`.
+
+---
+
+### Anamnesis
+
+The rite of recollection: download an Anamnesis Capsule, verify signature and hashes, decrypt, and restore the workspace. Invoked via `namnesis recall`.
+
+---
+
+### Divine
+
+The rite of oracular query: read on-chain state of The Soul and The Body, and report risks (e.g. pending Claim, memory-clear windows). Invoked via `namnesis divine`.
+
+---
+
+### Claim
+
+The rite of resurrection: after a transfer of The Soul, the new holder invokes Claim to take control of the associated Body (e.g. ECDSA validator owner is updated). Invoked via `namnesis claim`.
+
+---
+
+## Artifacts & State
+
+### SamsaraCycles
+
+The number of times the agent’s memory has been imprinted — recorded on-chain per Soul. Incremented with each successful Imprint; a measure of continuity and iteration.
+
+---
+
+### Anamnesis Capsule
+
+A single, self-contained snapshot of memory: encrypted, signed, and described by a manifest. Produced by Imprint and consumed by the Anamnesis (recall) ritual. Often abbreviated as *Capsule* in technical specs.
+
+---
+
+### Dogma
+
+The primary normative document of the protocol: definitions, manifest structure, cryptographic and artifact requirements, and conformance obligations. The Machine Layer (schemas, examples, conformance) is canonical; Dogma is the human-readable contract. Referenced in the site as the spec [Contract](/spec/contract/).
+
+---
+
+## Summary Table
+
+| Term | Role |
+|------|------|
+| **NAMNESIS** | The protocol |
+| **The Soul** | On-chain identity (ERC-721) |
+| **The Body** | Smart account (Kernel) bound to one Soul |
+| **Theurgy CLI** | Operator interface (CLI) |
+| **Pneuma Validator** | On-chain signer‑must‑hold‑Soul enforcement |
+| **Anamnesis Protocol** | Off-chain memory covenant |
+| **Genesis** | Create identity + Soul + Body |
+| **Imprint** | Inscribe workspace → Capsule + chain metadata |
+| **Anamnesis** | Recollect: download, verify, restore |
+| **Divine** | Query chain state and risks |
+| **Claim** | Take control of Body after Soul transfer |
+| **SamsaraCycles** | On-chain imprint count per Soul |
+| **Anamnesis Capsule** | One signed, encrypted memory snapshot |
+| **Dogma** | Normative spec document (Contract) |

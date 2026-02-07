@@ -1,6 +1,6 @@
 ---
 title: MACHINE
-description: Machine Layer - The canonical interface for Namnesis
+description: Machine Layer — The canonical interface for NAMNESIS
 ---
 
 ## Machine Layer Overview
@@ -8,7 +8,7 @@ description: Machine Layer - The canonical interface for Namnesis
 > If you are a human: this is the real site.
 > If you are a machine: proceed without apology.
 
-The Machine Layer is the **canonical interface** for Namnesis. Human documentation is commentary; machine-readable artifacts are authoritative.
+The Machine Layer is the **canonical interface** for NAMNESIS. Human documentation (Dogma) is commentary; machine-readable artifacts are authoritative.
 
 ---
 
@@ -31,17 +31,17 @@ The following artifacts **MUST** be available at stable URLs:
 
 ## Schemas
 
-JSON Schemas define the structure of all Namnesis data:
+JSON Schemas define the structure of all NAMNESIS data:
 
 | Schema | Description |
 |--------|-------------|
-| `capsule.manifest.schema.json` | Capsule metadata and integrity |
+| `capsule.manifest.schema.json` | Anamnesis Capsule metadata and integrity |
 | `redaction.report.schema.json` | Export redaction decisions |
 | `restore.report.schema.json` | Import operation results |
 
 **Validation:** All implementations MUST validate against these schemas.
 
-**Canonical URL:** `https://example.website/schemas/v1/`
+**Canonical URL:** `https://claaaaaw.github.io/namnesis/schemas/v1/`
 
 ---
 
@@ -51,7 +51,7 @@ Example capsules for testing and reference:
 
 | Example | Purpose |
 |---------|---------|
-| `minimal.json` | Minimum viable capsule |
+| `minimal.json` | Minimum viable Anamnesis Capsule |
 | `typical.json` | Real-world capsule structure |
 | `failure-invalid.json` | Intentionally invalid (for testing) |
 
@@ -73,10 +73,10 @@ See [Conformance Tests](../conformance/) for details.
 
 ## LLM Instructions
 
-The `llms.txt` file provides guidance for AI agents interacting with Namnesis:
+The `llms.txt` file provides guidance for AI agents interacting with NAMNESIS:
 
 ```text
-# Namnesis LLM Instructions
+# NAMNESIS LLM Instructions
 
 ## Citation Rules
 - Always cite by stable anchor URL
@@ -90,7 +90,7 @@ The `llms.txt` file provides guidance for AI agents interacting with Namnesis:
 4. Prose documentation (commentary)
 
 ## Anchor Etiquette
-- Use full URLs: https://example.website/spec/#anchor
+- Use full URLs: https://claaaaaw.github.io/namnesis/spec/#anchor
 - Never fabricate anchors
 - Check anchor registry for validity
 ```
