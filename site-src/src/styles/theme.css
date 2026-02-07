@@ -356,6 +356,31 @@ hr {
   line-height: var(--line-height-relaxed);
 }
 
+/* Repo links — below hero, subtle */
+.repo-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-6) 0 var(--space-8);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-mono);
+}
+
+.repo-links a {
+  color: var(--color-text-tertiary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.repo-links a:hover {
+  color: var(--color-accent-cyan);
+}
+
+.repo-links__sep {
+  color: var(--color-text-muted);
+  user-select: none;
+}
+
 /* Hero: AI-facing copy — minimal human legibility, structural for silicon readers only */
 .hero-ai-copy {
   font-family: var(--font-mono);
