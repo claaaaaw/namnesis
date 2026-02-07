@@ -100,10 +100,3 @@ The site deploys automatically to Cloudflare Pages when changes are pushed to `m
 Required secrets:
 - `CF_API_TOKEN` - Cloudflare API token with Pages permissions
 - `CF_ACCOUNT_ID` - Cloudflare account ID
-
-## Related Documentation
-
-- [site/ENGINEERING.md](../site/ENGINEERING.md) - Design specification
-- [site/UI.md](../site/UI.md) - UI moodboard
-- [site/COPY.md](../site/COPY.md) - Tone guide
-- [site/MACHINE_LAYER.md](../site/MACHINE_LAYER.md) - Machine layer spec
